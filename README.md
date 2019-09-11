@@ -3,6 +3,12 @@ searchurl
 
 Bing, Google, Yahooの検索結果をスクレイピングして検索結果のURLを一覧にして出力するコマンド。サジェストも対応。
 
+
+<p align="center">
+<img src="./images/searchurl1.png" />
+<img src="./images/searchurl2.png" />
+</p>
+
 ## Install
 
     git clone git@github.com:blacknon/searchurl.git
