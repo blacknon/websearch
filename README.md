@@ -5,8 +5,8 @@ Bing, Google, Yahooの検索結果をスクレイピングして検索結果のU
 
 
 <p align="center">
-<img src="./images/searchurl1.png" />
-<img src="./images/searchurl2.png" />
+<img src="./img/searchurl1.png" />
+<img src="./img/searchurl2.png" />
 </p>
 
 ## Install
