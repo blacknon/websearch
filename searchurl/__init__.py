@@ -108,7 +108,7 @@ def main():
     )
     parser_search.add_argument(
         '-P', '--proxy', type=str, default='',
-        help='プロキシサーバ(例: socks5://hogehoge:8080, https://fugafuga:18080)'
+        help='プロキシサーバ(例:socks5://hogehoge:8080,https://fugafuga:18080)'
     )
     parser_search.add_argument(
         '-S', '--splash', type=str, default='',
@@ -136,7 +136,7 @@ def main():
                                 ],
                                 type=str, help='検索エンジンを指定')
     parser_suggest.add_argument(
-        '-P', '--proxy', type=str, help='プロキシサーバ(例: socks5://hogehoge:8080, https://fugafuga:18080)')
+        '-P', '--proxy', type=str, help='プロキシサーバ(例:socks5://hogehoge:8080,https://fugafuga:18080)')
     parser_suggest.add_argument(
         '--jap', action='store_true', help='日本語の文字を検索キーワードに追加してサジェストを取得'
     )
@@ -149,6 +149,14 @@ def main():
     parser_suggest.add_argument(
         '--color', default='auto', choices=['auto', 'none', 'always'], type=str, help='color出力の切り替え')
     parser_suggest.set_defaults(handler=command_suggest)
+
+    # --version(-v)オプションのparser定義
+    parser.add_argument(
+        '-v',
+        '--version',
+        action='version',
+        version='%(prog)s {version}'.format(version=__version__)
+    )
 
     args = parser.parse_args()
     if hasattr(args, 'handler'):
