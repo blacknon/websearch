@@ -1,6 +1,9 @@
 #compdef searchurl
-
-    # '(- *)'{-h,--help}'[show help]'
+# =======================================================
+# Copyright(c) 2019 Blacknon. All rights reserved.
+# Use of this source code is governed by an MIT license
+# that can be found in the LICENSE file.
+# =======================================================
 
 _searchurl() {
   local context curcontext=$curcontext state line
@@ -26,6 +29,8 @@ _searchurl() {
             '(-P --proxy)'{-P,--proxy}'[proxy server]' \
             '(-S --splash)'{-S,--splash}'[Splash URI]:_values:(localhost\:8050)' \
             '(-i --image)'{-i,--image}'[Search Image flag]' \
+            '--color[output color(default:auto)]:_values:(auto always none)' \
+            '--debug[debug mode]' \
             '(-)*:: :->null_state' \
             && ret=0
         ;;
@@ -38,6 +43,7 @@ _searchurl() {
             '--alph[サジェスト取得時にアルファベットの候補を追加で検索]' \
             '--num[サジェスト取得時に数字の候補を追加で検索]' \
             '(-P --proxy)'{-P,--proxy}'[proxy server]' \
+            '--color[output color(default:auto)]:_values:(auto always none)'
             '(-)*:: :->null_state' \
             && ret=0
         ;;
