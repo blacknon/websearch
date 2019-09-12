@@ -9,7 +9,7 @@
 import argparse
 import threading
 
-from . import search, bing, google, yahoo
+from . import bing, google, yahoo
 
 
 # version
@@ -155,7 +155,7 @@ def main():
         '-v',
         '--version',
         action='version',
-        version='%(prog)s {version}'.format(version=__version__)
+        version='%(prog)s version:{version}'.format(version=__version__)
     )
 
     args = parser.parse_args()
