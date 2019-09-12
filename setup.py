@@ -58,6 +58,7 @@ if __name__ == "__main__":
             'bs4',
             'fake_useragent'
         ],
+        url='https://github.com/blacknon/searchurl',
         packages=setuptools.find_packages(),
         py_modules=['searchurl'],
         entry_points={
