@@ -43,7 +43,7 @@ _searchurl() {
             '--alph[サジェスト取得時にアルファベットの候補を追加で検索]' \
             '--num[サジェスト取得時に数字の候補を追加で検索]' \
             '(-P --proxy)'{-P,--proxy}'[proxy server]' \
-            '--color[output color(default:auto)]:_values:(auto always none)'
+            '--color[output color(default:auto)]:_values:(auto always none)' \
             '(-)*:: :->null_state' \
             && ret=0
         ;;
