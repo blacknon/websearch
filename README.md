@@ -20,7 +20,7 @@ Bing, Google, Yahooの検索結果をスクレイピングして検索結果のU
 
 ### search
 
-    # 検索(Google検索、上限300件)
+    # 検索(Google検索、デフォルト上限は300件)
     searchurl search うんこ
     searchurl search site:unko.org
 
