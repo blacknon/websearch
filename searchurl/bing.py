@@ -12,6 +12,9 @@ from .search import SearchEngine
 from .common import Color
 
 
+# TODO(blacknon): 検索結果の件数を取得し、その件数までurlを取得したら処理を停止させる(url超過してもリクエストを投げ続けるバグの修正)
+
+
 # bingでの検索
 def search(args):
     # engine
