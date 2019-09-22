@@ -56,7 +56,8 @@ if __name__ == "__main__":
         install_requires=[
             'argparse',
             'bs4',
-            'fake_useragent'
+            'fake_useragent',
+            'lxml'
         ],
         url='https://github.com/blacknon/searchurl',
         packages=setuptools.find_packages(),
