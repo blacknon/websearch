@@ -1,18 +1,18 @@
-searchurl
+websearch
 ===
 
 Bing, Google, Yahooの検索結果をスクレイピングして検索結果のURLを一覧にして出力するコマンド。サジェストも対応。
 
 
 <p align="center">
-<img src="./img/searchurl1.png" />
-<img src="./img/searchurl2.png" />
+<img src="./img/websearch1.png" />
+<img src="./img/websearch2.png" />
 </p>
 
 ## Install
 
-    git clone git@github.com:blacknon/searchurl.git
-    cd searchurl
+    git clone git@github.com:blacknon/websearch.git
+    cd websearch
     pip install -U ./
 
 
@@ -21,41 +21,41 @@ Bing, Google, Yahooの検索結果をスクレイピングして検索結果のU
 ### search
 
     # 検索(Google検索、デフォルト上限は300件)
-    searchurl search うんこ
-    searchurl search site:unko.org
+    websearch search うんこ
+    websearch search site:unko.org
 
     # 検索エンジン指定(Bing, Google, Yahoo)
-    searchurl search -t bing うんこ
-    searchurl search -t google うんこ
-    searchurl search -t yahoo うんこ
+    websearch search -t bing うんこ
+    websearch search -t google うんこ
+    websearch search -t yahoo うんこ
 
     # 検索件数指定
-    searchurl search -n 10 うんこ
+    websearch search -n 10 うんこ
 
     # Splash使用
-    searchurl search -S localhost:8050 うんこ
+    websearch search -S localhost:8050 うんこ
 
     # Proxy使用
-    searchurl search -P socks5://localhost:8000 うんこ
+    websearch search -P socks5://localhost:8000 うんこ
 
 
 ### suggest
 
     # サジェスト検索(Google)
-    searchurl suggest うんこ
+    websearch suggest うんこ
 
     # 検索エンジン指定(Bing, Google, Yahoo)
-    searchurl suggest -t bing うんこ
-    searchurl suggest -t google うんこ
-    searchurl suggest -t yahoo うんこ
+    websearch suggest -t bing うんこ
+    websearch suggest -t google うんこ
+    websearch suggest -t yahoo うんこ
 
     # サジェスト候補 キーワード追加検索
-    searchurl suggest --jap うんこ  # 前後に日本語を入れてサジェスト検索
-    searchurl suggest --alph うんこ # 前後にアルファベットを入れてサジェスト検索
-    searchurl suggest --num うんこ  # 前後に数字を入れてサジェスト検索
+    websearch suggest --jap うんこ  # 前後に日本語を入れてサジェスト検索
+    websearch suggest --alph うんこ # 前後にアルファベットを入れてサジェスト検索
+    websearch suggest --num うんこ  # 前後に数字を入れてサジェスト検索
 
     # Proxy使用
-    searchurl suggest -P socks5://localhost:8000 うんこ
+    websearch suggest -P socks5://localhost:8000 うんこ
 
 
 ## Note

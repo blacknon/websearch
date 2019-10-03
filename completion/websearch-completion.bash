@@ -5,7 +5,7 @@
 # that can be found in the LICENSE file.
 # =======================================================
 
-_searchurl()
+_websearch()
 {
   local cur
   local cmd
@@ -19,4 +19,4 @@ _searchurl()
   fi
 }
 
-complete -F _searchurl -o default searchurl
+complete -F _websearch -o default websearch
