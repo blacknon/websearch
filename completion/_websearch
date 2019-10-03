@@ -1,11 +1,11 @@
-#compdef searchurl
+#compdef websearch
 # =======================================================
 # Copyright(c) 2019 Blacknon. All rights reserved.
 # Use of this source code is governed by an MIT license
 # that can be found in the LICENSE file.
 # =======================================================
 
-_searchurl() {
+_websearch() {
   local context curcontext=$curcontext state line
   declare -A opt_args
   local ret=1
@@ -14,7 +14,7 @@ _searchurl() {
   _arguments -C \
     '(-h --help)'{-h,--help}'[show help]' \
     '(-v --version)'{-v,--version}'[show version]' \
-    '1: :__searchurl_commands' \
+    '1: :__websearch_commands' \
     '*:: :->modes' \
     && ret=0
 
@@ -55,7 +55,7 @@ _searchurl() {
   return ret
 }
 
-__searchurl_commands () {
+__websearch_commands () {
     local -a _c
     _c=(
         'search:url検索モード'

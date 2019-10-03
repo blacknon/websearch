@@ -10,7 +10,7 @@ import os
 import platform
 
 import setuptools
-from searchurl import __version__
+from websearch import __version__
 
 
 # 補完ファイルインストール用関数
@@ -40,9 +40,9 @@ def get_data_files():
 
     loc = {'bash': get_completion_install_location(shell='bash'),
            'zsh': get_completion_install_location(shell='zsh')}
-    files = dict(bash=['completion/searchurl-completion.bash'],
-                 zsh=['completion/searchurl-completion.bash',
-                      'completion/_searchurl'])
+    files = dict(bash=['completion/websearch-completion.bash'],
+                 zsh=['completion/websearch-completion.bash',
+                      'completion/_websearch'])
     data_files = []
     data_files.append((loc['bash'], files['bash']))
     data_files.append((loc['zsh'], files['zsh']))
@@ -51,7 +51,7 @@ def get_data_files():
 
 if __name__ == "__main__":
     setuptools.setup(
-        name='searchurl',
+        name='websearch',
         version=__version__,
         install_requires=[
             'argparse',
@@ -59,12 +59,12 @@ if __name__ == "__main__":
             'fake_useragent',
             'lxml'
         ],
-        url='https://github.com/blacknon/searchurl',
+        url='https://github.com/blacknon/websearch',
         packages=setuptools.find_packages(),
-        py_modules=['searchurl'],
+        py_modules=['websearch'],
         entry_points={
             'console_scripts': [
-                'searchurl = searchurl:main',
+                'websearch = websearch:main',
             ],
         },
         data_files=get_data_files(),
