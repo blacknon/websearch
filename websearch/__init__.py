@@ -10,10 +10,10 @@ import argparse
 import threading
 
 from . import bing, google, yahoo
-
+from pkg_resources import get_distribution
 
 # version
-__version__ = '0.1.0'
+__version__ = get_distribution('websearch').version
 
 
 # searchサブコマンドでの動作
@@ -101,7 +101,8 @@ def main():
                                ],
                                type=str, help='検索エンジンを指定')
     parser_search.add_argument(
-        '-i', '--image', action='store_true', help='画像検索を行う(現在はGoogleのみ利用可能.Splash経由だとエラーになるので注意)'
+        '-i', '--image', action='store_true',
+        help='画像検索を行う(現在はGoogleのみ利用可能.Splash経由だとエラーになるので注意)'
     )
     parser_search.add_argument(
         '-n', '--num', default=300, type=int, help='検索結果の取得数'
@@ -119,7 +120,8 @@ def main():
     parser_search.add_argument(
         '--debug', action='store_true', help='debug mode')  # debug
     parser_search.add_argument(
-        '--color', default='auto', choices=['auto', 'none', 'always'], type=str, help='color出力の切り替え')
+        '--color', default='auto', choices=['auto', 'none', 'always'],
+        type=str, help='color出力の切り替え')
     parser_search.set_defaults(handler=command_search)
 
     # suggest
@@ -136,7 +138,8 @@ def main():
                                 ],
                                 type=str, help='検索エンジンを指定')
     parser_suggest.add_argument(
-        '-P', '--proxy', type=str, help='プロキシサーバ(例:socks5://hogehoge:8080,https://fugafuga:18080)')
+        '-P', '--proxy', type=str,
+        help='プロキシサーバ(例:socks5://hogehoge:8080,https://fugafuga:18080)')
     parser_suggest.add_argument(
         '--jap', action='store_true', help='日本語の文字を検索キーワードに追加してサジェストを取得'
     )
@@ -147,7 +150,8 @@ def main():
         '--num', action='store_true', help='数字を検索キーワードに追加してサジェストを取得'
     )
     parser_suggest.add_argument(
-        '--color', default='auto', choices=['auto', 'none', 'always'], type=str, help='color出力の切り替え')
+        '--color', default='auto', choices=['auto', 'none', 'always'],
+        type=str, help='color出力の切り替え')
     parser_suggest.set_defaults(handler=command_suggest)
 
     # --version(-v)オプションのparser定義
