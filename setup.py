@@ -10,7 +10,6 @@ import os
 import platform
 
 import setuptools
-from websearch import __version__
 
 
 # 補完ファイルインストール用関数
@@ -52,7 +51,7 @@ def get_data_files():
 if __name__ == "__main__":
     setuptools.setup(
         name='websearch',
-        version=__version__,
+        version='0.1.1',
         install_requires=[
             'argparse',
             'bs4',
