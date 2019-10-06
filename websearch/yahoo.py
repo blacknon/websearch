@@ -29,9 +29,7 @@ def search(args):
 
     # Header
     header = '[YahooSearch]: '
-    if args.color == 'always':
-        header = Color.YELLOW + header + Color.END
-    elif args.color == 'auto' and sys.stdout.isatty():
+    if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty()):
         header = Color.YELLOW + header + Color.END
 
     # 検索タイプを設定(テキスト or 画像)
@@ -41,14 +39,36 @@ def search(args):
         exit()  # debug
         search_type = 'image'
 
-    # Google検索を実行
+    # Yahoo検索を実行
     result = yahoo.search(args.query, type=search_type,
                           maximum=args.num, debug=args.debug)
-    for link in result:
-        print(header + link)
+
+    # debug
+    if args.debug:
+        print(Color.GRAY, file=sys.stderr)
+        print(result, file=sys.stderr)
+        print(Color.END, file=sys.stderr)
+
+    # sep
+    sep = ''
+    if args.nullchar:
+        sep = '\0'
+
+    # 検索結果を出力
+    for d in result:
+        # titleの色指定
+        title = d['title']
+        if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty()):
+            title = Color.GRAY + title + ": " + Color.END
+
+        link = d['link']
+        if args.title:
+            print(header + sep + title + sep + link)
+        else:
+            print(header + sep + link)
 
 
-# yahooでの検索
+# yahooでのsuggest取得
 def suggest(args):
     # engine
     yahoo = SearchEngine()
@@ -56,9 +76,7 @@ def suggest(args):
 
     # header
     header = '[YahooSuggest]: '
-    if args.color == 'always':
-        header = Color.YELLOW + header + Color.END
-    elif args.color == 'auto' and sys.stdout.isatty():
+    if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty()):
         header = Color.YELLOW + header + Color.END
 
     # GoogleでのSuggestを取得

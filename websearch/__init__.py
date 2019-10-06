@@ -9,10 +9,10 @@
 import argparse
 import threading
 
-from . import bing, google, yahoo
+from . import bing, google, yahoo, baidu
 from pkg_resources import get_distribution
 
-# version
+# version (setup.pyから取得してくる)
 __version__ = get_distribution('websearch').version
 
 
@@ -20,16 +20,24 @@ __version__ = get_distribution('websearch').version
 def command_search(args):
     # if all
     if args.search_type == 'all':
-        thread_bind = threading.Thread(
+        thread_baidu = threading.Thread(
+            target=baidu.search, args=([args]))
+        thread_bing = threading.Thread(
             target=bing.search, args=([args]))
         thread_google = threading.Thread(
             target=google.search, args=([args]))
         thread_yahoo = threading.Thread(
             target=yahoo.search, args=([args]))
 
-        thread_bind.start()
+        thread_baidu.start()
+        thread_bing.start()
         thread_google.start()
         thread_yahoo.start()
+        return
+
+    # if baidu
+    if args.search_type == 'baidu':
+        baidu.search(args)
         return
 
     # if bing
@@ -52,16 +60,24 @@ def command_search(args):
 def command_suggest(args):
     # if all
     if args.search_type == 'all':
-        thread_bind = threading.Thread(
+        thread_baidu = threading.Thread(
+            target=baidu.suggest, args=([args]))
+        thread_bing = threading.Thread(
             target=bing.suggest, args=([args]))
         thread_google = threading.Thread(
             target=google.suggest, args=([args]))
         thread_yahoo = threading.Thread(
             target=yahoo.suggest, args=([args]))
 
-        thread_bind.start()
+        thread_baidu.start()
+        thread_bing.start()
         thread_google.start()
         thread_yahoo.start()
+        return
+
+    # if baidu
+    if args.search_type == 'baidu':
+        baidu.suggest(args)
         return
 
     # if bing
@@ -94,6 +110,7 @@ def main():
         'query', action='store', type=str, help='query')
     parser_search.add_argument('-t', '--search_type', default='google',
                                choices=[
+                                   'baidu',
                                    'bing',
                                    'google',
                                    'yahoo',
@@ -105,6 +122,14 @@ def main():
         help='画像検索を行う(現在はGoogleのみ利用可能.Splash経由だとエラーになるので注意)'
     )
     parser_search.add_argument(
+        '-T', '--title', action='store_true',
+        help='検索結果のタイトルも出力する'
+    )
+    parser_search.add_argument(
+        '-0', '--nullchar', action='store_true',
+        help='null characterを区切り文字として使用する'
+    )
+    parser_search.add_argument(
         '-n', '--num', default=300, type=int, help='検索結果の取得数'
     )
     parser_search.add_argument(
@@ -114,8 +139,7 @@ def main():
     parser_search.add_argument(
         '-S', '--splash', type=str, default='',
         help='Splash(ヘッドレスブラウザ)を利用する場合、そのアドレスを指定。'
-        '(例: localhost:8050 => '
-        'http://localhost:8050/render.html?url=https://www.google.co.jp/search?hogehoge...)'
+        '(例: localhost:8050 => http://localhost:8050/render.html?url=https://www.google.co.jp/search?hogehoge...)'
     )
     parser_search.add_argument(
         '--debug', action='store_true', help='debug mode')  # debug
@@ -131,6 +155,7 @@ def main():
         'query', action='store', type=str, help='query')
     parser_suggest.add_argument('-t', '--search_type', default='google',
                                 choices=[
+                                    'baidu',
                                     'bing',
                                     'google',
                                     'yahoo',
@@ -139,7 +164,7 @@ def main():
                                 type=str, help='検索エンジンを指定')
     parser_suggest.add_argument(
         '-P', '--proxy', type=str,
-        help='プロキシサーバ(例:socks5://hogehoge:8080,https://fugafuga:18080)')
+        help='プロキシサーバ(例:socks5://hogehoge:8080, https://fugafuga:18080)')
     parser_suggest.add_argument(
         '--jap', action='store_true', help='日本語の文字を検索キーワードに追加してサジェストを取得'
     )
