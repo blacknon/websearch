@@ -63,9 +63,23 @@ Baiduは日本語の結果は大体帰ってこないので、基本中国語と
     websearch suggest -P socks5://localhost:8000 うんこ
 
 
-#### lib
+### lib
 
-
+    from websearch import search
+    
+    
+    # google class
+    google = search.SearchEngine()
+    google.set('google')
+    
+    # Google検索を実行
+    search_result = google.search('うんこ')
+    
+    # GoogleでのSuggestを取得
+    suggest_result = google.suggest('うんこ')
+    
+    print(search_result)
+    print(suggest_result)
 
 
 ## Note
