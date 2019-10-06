@@ -227,9 +227,10 @@ class SearchEngine:
 
                 # レスポンスを取得
                 res = self.session.get(self.SUGGEST_URL + '?' + params)
-                suggests[char if char == '' else char[-1]
-                         ] = [e['q']
-                              for e in res.json()['g']]
+                if 'g' in res.json():
+                    suggests[char if char == '' else char[-1]
+                             ] = [e['q']
+                                  for e in res.json()['g']]
 
             if self.ENGINE == 'Bing':  # Bing
                 self.SUGGEST_PARAM['qry'] = keyword + char

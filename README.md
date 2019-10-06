@@ -19,7 +19,9 @@ Baiduは日本語の結果は大体帰ってこないので、基本中国語と
 
 ## Usage
 
-### search
+### command
+
+#### search
 
     # 検索(Google検索、デフォルト上限は300件)
     websearch search うんこ
@@ -41,7 +43,7 @@ Baiduは日本語の結果は大体帰ってこないので、基本中国語と
     websearch search -P socks5://localhost:8000 うんこ
 
 
-### suggest
+#### suggest
 
     # サジェスト検索(Google)
     websearch suggest うんこ
@@ -59,6 +61,11 @@ Baiduは日本語の結果は大体帰ってこないので、基本中国語と
 
     # Proxy使用
     websearch suggest -P socks5://localhost:8000 うんこ
+
+
+#### lib
+
+
 
 
 ## Note
