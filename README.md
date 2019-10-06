@@ -1,7 +1,8 @@
 websearch
 ===
 
-Bing, Google, Yahooの検索結果をスクレイピングして検索結果のURLを一覧にして出力するコマンド。サジェストも対応。
+Baidu, Bing, Google, Yahooの検索結果をスクレイピングして検索結果のURLを一覧にして出力するコマンド。サジェストも対応。\
+Baiduは日本語の結果は大体帰ってこないので、基本中国語とか.cnドメインへの対応用。
 
 
 <p align="center">
@@ -24,7 +25,8 @@ Bing, Google, Yahooの検索結果をスクレイピングして検索結果のU
     websearch search うんこ
     websearch search site:unko.org
 
-    # 検索エンジン指定(Bing, Google, Yahoo)
+    # 検索エンジン指定(Baidu, Bing, Google, Yahoo)
+    websearch search -t baidu うんこ
     websearch search -t bing うんこ
     websearch search -t google うんこ
     websearch search -t yahoo うんこ
@@ -45,6 +47,7 @@ Bing, Google, Yahooの検索結果をスクレイピングして検索結果のU
     websearch suggest うんこ
 
     # 検索エンジン指定(Bing, Google, Yahoo)
+    websearch suggest -t baidu うんこ
     websearch suggest -t bing うんこ
     websearch suggest -t google うんこ
     websearch suggest -t yahoo うんこ
