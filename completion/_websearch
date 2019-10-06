@@ -25,11 +25,13 @@ _websearch() {
         search)
           _arguments -C \
             '(-h --help)'{-h,--help}'[show help]' \
-            '-t[search engine]:_values:(bing google yahoo all)' \
+            '-t[search engine]:_values:(baidu bing google yahoo all)' \
             '(-n --num)'{-n,--num}'[get search result num (int)]:_values:(100 200 300 400 500)' \
             '(-P --proxy)'{-P,--proxy}'[proxy server]' \
             '(-S --splash)'{-S,--splash}'[Splash URI]:_values:(localhost\:8050)' \
             '(-i --image)'{-i,--image}'[Search Image flag]' \
+            '(-T --title)'{-T,--title}'[検索結果のタイトルも取得する]' \
+            '(-0 --nullchar)'{-0,--nullchar}'[区切り文字としてNull Characterを使用する]' \
             '--color[output color(default:auto)]:_values:(auto always none)' \
             '--debug[debug mode]' \
             '(-)*:: :->null_state' \
@@ -39,7 +41,7 @@ _websearch() {
         suggest)
           _arguments -C \
             '(-h --help)'{-h,--help}'[show help]' \
-            '-t[search engine]:_values:(bing google all)' \
+            '-t[search engine]:_values:(baidu bing google yahoo all)' \
             '--jap[サジェスト取得時に日本語の候補を追加で検索]' \
             '--alph[サジェスト取得時にアルファベットの候補を追加で検索]' \
             '--num[サジェスト取得時に数字の候補を追加で検索]' \

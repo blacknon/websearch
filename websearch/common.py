@@ -17,8 +17,15 @@ class Color:
     PURPLE = '\033[35m'
     CYAN = '\033[36m'
     WHITE = '\033[37m'
+    GRAY = '\033[1;30m'
     END = '\033[0m'
     BOLD = '\038[1m'
     UNDERLINE = '\033[4m'
     INVISIBLE = '\033[08m'
     REVERCE = '\033[07m'
+
+
+# dictやlistから重複要素を除外する
+def get_unique_list(seq):
+    seen = []
+    return [x for x in seq if x not in seen and not seen.append(x)]

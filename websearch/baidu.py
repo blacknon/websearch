@@ -12,34 +12,34 @@ from .search import SearchEngine
 from .common import Color
 
 
-# googleでの検索
+# baiduでの検索
 def search(args):
-    # google class
-    google = SearchEngine()
-    google.set('google')
+    # baidu class
+    baidu = SearchEngine()
+    baidu.set('baidu')
 
     # proxy
     if args.proxy != '':
-        google.set_proxy(args.proxy)
+        baidu.set_proxy(args.proxy)
 
     # Splush
     # TODO(blacknon): Proxyへの対応
     if args.splash != '':
-        google.SPLASH_URL = 'http://' + args.splash + '/render.html?url='
+        baidu.SPLASH_URL = 'http://' + args.splash + '/render.html?url='
 
     # Header
-    header = '[GoogleSearch]: '
+    header = '[BaiduSearch]: '
     if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty()):
-        header = Color.PURPLE + header + Color.END
+        header = Color.RED + header + Color.END
 
     # 検索タイプを設定(テキスト or 画像)
     search_type = 'text'
     if args.image:
         search_type = 'image'
 
-    # Google検索を実行
-    result = google.search(args.query, type=search_type,
-                           maximum=args.num, debug=args.debug)
+    # baidu検索を実行
+    result = baidu.search(args.query, type=search_type,
+                          maximum=args.num, debug=args.debug)
 
     # debug
     if args.debug:
@@ -66,19 +66,19 @@ def search(args):
             print(header + sep + link)
 
 
-# googleでのsuggest取得
+# baiduでのsuggest取得
 def suggest(args):
     # engine
-    google = SearchEngine()
-    google.set('google')
+    baidu = SearchEngine()
+    baidu.set('baidu')
 
     # header
-    header = '[GoogleSuggest]: '
+    header = '[BaiduSuggest]: '
     if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty()):
-        header = Color.PURPLE + header + Color.END
+        header = Color.RED + header + Color.END
 
-    # GoogleでのSuggestを取得
-    result = google.suggest(
+    # baiduでのSuggestを取得
+    result = baidu.suggest(
         args.query,
         jap=args.jap,
         alph=args.alph,

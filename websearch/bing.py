@@ -9,7 +9,7 @@
 import sys
 
 from .search import SearchEngine
-from .common import Color
+from .common import Color, get_unique_list
 
 
 # TODO(blacknon): 検索結果の件数を取得し、その件数までurlを取得したら処理を停止させる(url超過してもリクエストを投げ続けるバグの修正)
@@ -32,9 +32,7 @@ def search(args):
 
     # Header
     header = '[BingSearch]: '
-    if args.color == 'always':
-        header = Color.CYAN + header + Color.END
-    elif args.color == 'auto' and sys.stdout.isatty():
+    if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty()):
         header = Color.CYAN + header + Color.END
 
     # 検索タイプを設定(テキスト or 画像)
@@ -49,9 +47,31 @@ def search(args):
                          maximum=args.num, debug=args.debug)
 
     # 仕様上、重複が発生するため除外
-    result = sorted(set(result), key=result.index)
-    for link in result:
-        print(header + link)
+    result = get_unique_list(result)
+
+    # debug
+    if args.debug:
+        print(Color.GRAY, file=sys.stderr)
+        print(result, file=sys.stderr)
+        print(Color.END, file=sys.stderr)
+
+    # sep
+    sep = ''
+    if args.nullchar:
+        sep = '\0'
+
+    # 検索結果を出力
+    for d in result:
+        # titleの色指定
+        title = d['title']
+        if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty()):
+            title = Color.GRAY + title + ": " + Color.END
+
+        link = d['link']
+        if args.title:
+            print(header + sep + title + sep + link)
+        else:
+            print(header + sep + link)
 
 
 # bingでのsuggest取得
@@ -66,9 +86,7 @@ def suggest(args):
 
     # header
     header = '[BingSuggest]: '
-    if args.color == 'always':
-        header = Color.CYAN + header + Color.END
-    elif args.color == 'auto' and sys.stdout.isatty():
+    if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty()):
         header = Color.CYAN + header + Color.END
 
     # BingでのSuggestを取得
