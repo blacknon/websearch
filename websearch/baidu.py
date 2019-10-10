@@ -57,7 +57,6 @@ def search(args):
         link = d['link']
         if args.title:
             # titleの色指定
-            title = d['title'] + ": "
             title = d['title']
             title = title + ": "
             if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty()):
