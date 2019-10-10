@@ -104,6 +104,7 @@ def main():
     subparsers = parser.add_subparsers()
 
     # search
+    # TODO(blacknon): 日付の範囲指定を追加する
     parser_search = subparsers.add_parser(
         'search', help='search mode. see `search -h`')
     parser_search.add_argument(
