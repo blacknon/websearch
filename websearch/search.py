@@ -44,22 +44,22 @@ class SearchEngine:
             self.SEARCH_URL = 'https://www.baidu.com/s'
             self.SUGGEST_URL = 'https://www.baidu.com/sugrec'
             self.TEXT_PARAM = {
-                'wd': '',  # 検索キーワード
-                'rn': '50',
-                'filter': '0',
-                'ia': 'web',
-                'pn': ''  # 開始位置
+                'wd': '',      # 検索キーワード
+                'rn': '50',    # 1ページごとの表示件数
+                'filter': '0', #
+                'ia': 'web',   #
+                'pn': ''       # 開始位置
             }
             self.IMAGE_PARAM = {
-                'wd': '',  # 検索キーワード
-                'tbm': 'isch',
-                'filter': '0',
-                'ia': 'web',
-                'ijn': ''
+                'wd': '',      # 検索キーワード
+                'tbm': 'isch', #
+                'filter': '0', #
+                'ia': 'web',   #
+                'ijn': ''      #
             }
             self.SUGGEST_PARAM = {
-                'wd': '',  # 検索キーワード
-                'prod': 'pc'
+                'wd': '',      # 検索キーワード
+                'prod': 'pc'   #
             }
             self.SOUP_SELECT_URL = '.result > .t > a'
             self.SOUP_SELECT_TITLE = '.result > .t > a'
@@ -72,17 +72,14 @@ class SearchEngine:
             self.SEARCH_URL = 'https://www.bing.com/search'
             self.SUGGEST_URL = 'https://www.bing.com/AS/Suggestions'
             self.TEXT_PARAM = {
-                'q': '',  # 検索キーワード
-                'count': '100',
-                'filter': '0',
-                'ia': 'web',
-                'first': ''  # 開始位置
+                'q': '',        # 検索キーワード
+                'count': '100', # 1ページごとの表示件数
+                'filters': '',  # 期間含めフィルターとして指定するパラメータ
+                'first': ''     # 開始位置
             }
             self.IMAGE_PARAM = {
                 'q': '',  # 検索キーワード
-                'tbm': 'isch',
-                'filter': '0',
-                'ia': 'web',
+                'filters': '',
                 'ijn': ''  # 開始位置
             }
             self.SUGGEST_PARAM = {
@@ -102,16 +99,18 @@ class SearchEngine:
             self.SEARCH_URL = 'https://www.google.co.jp/search'
             self.SUGGEST_URL = 'http://www.google.co.jp/complete/search'
             self.TEXT_PARAM = {
-                'q': '',  # 検索キーワード
-                'num': '100',
-                'filter': '0',
-                'start': ''  # 開始位置
+                'q': '',        # 検索キーワード
+                'num': '100',   # 1ページごとの表示件数
+                'filter': '0',  # 類似ページのフィルタリング(0...無効, 1...有効)
+                'start': '',    # 開始位置
+                'tbs': ''       # 期間
             }
             self.IMAGE_PARAM = {
-                'q': '',  # 検索キーワード
-                'tbm': 'isch',
-                'filter': '0',
-                'ijn': ''  # 開始位置
+                'q': '',        # 検索キーワード
+                'tbm': 'isch',  # 検索の種類(isch...画像)
+                'filter': '0',  # 類似ページのフィルタリング(0...無効, 1...有効)
+                'ijn': '',      # 開始位置
+                'tbs': ''       # 期間
             }
             self.SUGGEST_PARAM = {
                 'q': '',  # 検索キーワード
@@ -121,7 +120,8 @@ class SearchEngine:
                 'client': 'firefox'
             }
             self.SOUP_SELECT_URL = '.rc > .r > a'
-            self.SOUP_SELECT_TITLE = '.rc > .r > a > .LC20lb > .ellip'
+            # self.SOUP_SELECT_TITLE = '.rc > .r > a > .LC20lb > .ellip'
+            self.SOUP_SELECT_TITLE = '.rc > .r > a > .LC20lb'
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
             return
 
@@ -133,19 +133,20 @@ class SearchEngine:
             self.SEARCH_URL = 'https://search.yahoo.co.jp/search'
             self.SUGGEST_URL = 'https://assist-search.yahooapis.jp/SuggestSearchService/V5/webassistSearch'
             self.TEXT_PARAM = {
-                'p': '',  # 検索キーワード
-                'num': '100',  # 指定不可(削除)
-                'filter': '0',
-                'b': ''  # 開始位置
+                'p': '',         # 検索キーワード
+                'num': '100',    # 指定不可(削除)
+                'day_from': '',  # 開始日時(yyyy/mm/dd)
+                'day_to': '',    # 終了日時(yyyy/mm/dd)
+                'b': ''          # 開始位置
             }
             self.IMAGE_PARAM = {
-                'q': '',  # 検索キーワード
-                'tbm': 'isch',
-                'filter': '0',
-                'ijn': ''  # 開始位置
+                'q': '',       # 検索キーワード
+                'tbm': 'isch', #
+                'filter': '0', #
+                'ijn': ''      # 開始位置
             }
             self.SUGGEST_PARAM = {
-                'query': '',  # 検索キーワード
+                'query': '',   # 検索キーワード
                 # ↓正常に動作しなくなった場合はブラウザからアクセスして更新！ (TODO:自動取得処理の追加)
                 'appid': 'dj0zaiZpPVU5MGlSOUZ4cHVLbCZzPWNvbnN1bWVyc2VjcmV0Jng9ZGQ-',
                 'output': 'json',
@@ -155,22 +156,50 @@ class SearchEngine:
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
             return
 
+    def set_range(self, start, end):
+        ''' 開始・終了期間を検索エンジンごとのパラメータに適用する '''
+
+        # Baidu
+
+
+        # Bing
+
+
+        # DuckDuckGo
+
+
+        # Google
+
+
+        # Yahoo
+
+
+        None
+
+
     def set_proxy(self, proxy):
+        ''' 検索時のProxyを定義 '''
+
         proxies = {
             'http': proxy,
             'https': proxy
         }
         self.session.proxies = proxies
 
-    def search(self, keyword, type='text', maximum=100, parallel=False, debug=False):
+    def search(self, keyword, type='text', maximum=100, parallel=False, debug=False, start='', end=''):
         ''' 検索 '''
         print(self.ENGINE, type.capitalize(),
               'Search:', keyword, file=sys.stderr)
         result, total = [], 0
         query = self.query_gen(keyword, type)
 
+        # maximumが0の場合、返す値は0個になるのでこのままreturn
         if maximum == 0:
             return
+
+        # 期間(start, end)が指定されている場合、各検索エンジンの該当パラメータに追加する
+        if start != '' or end != '':
+            self.set_range(start, end)
 
         while True:
             q = next(query)
