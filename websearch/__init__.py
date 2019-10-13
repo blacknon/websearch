@@ -142,6 +142,14 @@ def main():
         '(例: localhost:8050 => http://localhost:8050/render.html?url=https://www.google.co.jp/search?hogehoge...)'
     )
     parser_search.add_argument(
+        '--start', type=str, default='',
+        help='期間指定(開始)'
+    )
+    parser_search.add_argument(
+        '--end', type=str, default='',
+        help='期間指定(終了)'
+    )
+    parser_search.add_argument(
         '--debug', action='store_true', help='debug mode')  # debug
     parser_search.add_argument(
         '--color', default='auto', choices=['auto', 'none', 'always'],
