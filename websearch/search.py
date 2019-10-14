@@ -6,6 +6,7 @@
 # that can be found in the LICENSE file.
 # =======================================================
 
+import asyncio
 import requests
 import json
 import sys
@@ -293,18 +294,6 @@ class SearchEngine:
             sleep(0.5)
         return suggests
 
-    def resolv_url(self, url):
-        ''' リダイレクト先のurlを取得する '''
-        try:
-            res_header = self.session.head(url, allow_redirects=False).headers
-        except requests.RequestException:
-            return url
-        except ConnectionError:
-            return url
-        else:
-            url = res_header['Location']
-            return url
-
     def query_gen(self, keyword, type):
         ''' 検索クエリの生成 '''
         page = 0
@@ -359,14 +348,16 @@ class SearchEngine:
             jsons = [json.loads(e.get_text()) for e in elements]
             elinks = [js['ou'] for js in jsons]
 
+        # もし検索エンジンがBaiduだった場合、linkのリダイレクトを追う(asyncを利用した非同期処理)
+        if self.ENGINE == 'Baidu':
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            elinks = loop.run_until_complete(resolv_links(loop, self.session, elinks))
+
         # dictをlistに入れていく
         links = list()
         n = 0
         for link in elinks:
-            # もし検索エンジンがBaiduだった場合、linkのリダイレクトを追う
-            if self.ENGINE == 'Baidu':
-                link = self.resolv_url(link)
-
             # `translate.google.co.jp`のURLを削除していく(Google翻訳のページ)
             if not re.match(r"^https://translate.google.co.jp", link):
                 if len(etitles) > n:
@@ -377,3 +368,25 @@ class SearchEngine:
                 n += 1
 
         return links
+
+
+def resolv_url(session, url):
+    ''' リダイレクト先のurlを取得する(Baiduで使用) '''
+    try:
+        res_header = session.head(url, allow_redirects=False).headers
+    except requests.RequestException:
+        return url
+    except ConnectionError:
+        return url
+    else:
+        url = res_header['Location']
+    return url
+
+
+async def resolv_links(loop, session, links):
+    ''' リダイレクト先のurlをパラレルで取得する(Baiduで使用) '''
+    async def req(session, url):
+        return await loop.run_in_executor(None, resolv_url, session, url)
+
+    tasks = [req(session, link) for link in links]
+    return await asyncio.gather(*tasks)

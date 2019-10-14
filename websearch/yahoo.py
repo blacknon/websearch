@@ -57,10 +57,11 @@ def search(args):
     # 検索結果を出力
     for d in result:
         link = d['link']
-        if args.title:
-            # titleの色指定
+        if args.title and 'title' in d:
             title = d['title']
             title = title + ": "
+
+            # titleの色指定
             if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty()):
                 title = Color.GRAY + title + Color.END
 
