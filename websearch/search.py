@@ -12,6 +12,7 @@ import json
 import sys
 import re
 from string import ascii_lowercase, digits
+from datetime import datetime
 from urllib import parse
 from time import sleep
 from fake_useragent import UserAgent
@@ -45,18 +46,18 @@ class SearchEngine:
             self.SEARCH_URL = 'https://www.baidu.com/s'
             self.SUGGEST_URL = 'https://www.baidu.com/sugrec'
             self.TEXT_PARAM = {
-                'wd': '',      # 検索キーワード
-                'rn': '50',    # 1ページごとの表示件数
-                'filter': '0', #
-                'ia': 'web',   #
-                'pn': ''       # 開始位置
+                'wd': '',       # 検索キーワード
+                'rn': '50',     # 1ページごとの表示件数
+                'filter': '0',  # aaa
+                'ia': 'web',    #
+                'pn': ''        # 開始位置
             }
             self.IMAGE_PARAM = {
-                'wd': '',      # 検索キーワード
-                'tbm': 'isch', #
-                'filter': '0', #
-                'ia': 'web',   #
-                'ijn': ''      #
+                'wd': '',       # 検索キーワード
+                'tbm': 'isch',  #
+                'filter': '0',  #
+                'ia': 'web',    #
+                'ijn': ''       #
             }
             self.SUGGEST_PARAM = {
                 'wd': '',      # 検索キーワード
@@ -73,15 +74,15 @@ class SearchEngine:
             self.SEARCH_URL = 'https://www.bing.com/search'
             self.SUGGEST_URL = 'https://www.bing.com/AS/Suggestions'
             self.TEXT_PARAM = {
-                'q': '',        # 検索キーワード
-                'count': '100', # 1ページごとの表示件数
-                'filters': '',  # 期間含めフィルターとして指定するパラメータ
-                'first': ''     # 開始位置
+                'q': '',         # 検索キーワード
+                'count': '100',  # 1ページごとの表示件数
+                'filters': '',   # 期間含めフィルターとして指定するパラメータ
+                'first': ''      # 開始位置
             }
             self.IMAGE_PARAM = {
-                'q': '',  # 検索キーワード
-                'filters': '',
-                'ijn': ''  # 開始位置
+                'q': '',        # 検索キーワード
+                'filters': '',  #
+                'ijn': ''       # 開始位置
             }
             self.SUGGEST_PARAM = {
                 'qry': '',  # 検索キーワード
@@ -121,7 +122,6 @@ class SearchEngine:
                 'client': 'firefox'
             }
             self.SOUP_SELECT_URL = '.rc > .r > a'
-            # self.SOUP_SELECT_TITLE = '.rc > .r > a > .LC20lb > .ellip'
             self.SOUP_SELECT_TITLE = '.rc > .r > a > .LC20lb'
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
             return
@@ -141,10 +141,10 @@ class SearchEngine:
                 'b': ''          # 開始位置
             }
             self.IMAGE_PARAM = {
-                'q': '',       # 検索キーワード
-                'tbm': 'isch', #
-                'filter': '0', #
-                'ijn': ''      # 開始位置
+                'q': '',        # 検索キーワード
+                'tbm': 'isch',  #
+                'filter': '0',  #
+                'ijn': ''       # 開始位置
             }
             self.SUGGEST_PARAM = {
                 'query': '',   # 検索キーワード
@@ -161,26 +161,55 @@ class SearchEngine:
         ''' 開始・終了期間を検索エンジンごとのパラメータに適用する '''
 
         # Baidu
-
+        if self.ENGINE == 'Baidu':
+            None
+            return
 
         # Bing
+        if self.ENGINE == 'Bing':
+            # ex.) filters=ex1:"ez5_18170_18174"
+            # ※ 1970-01-01からの日数で計測されている
+            # 日付を取得する
+            unix_day = datetime.strptime('1970-01-01', "%Y-%m-%d")
+            cd_min = (start - unix_day).days
+            cd_max = (end - unix_day).days
 
+            # GETパラメータに日時データを追加
+            self.TEXT_PARAM['filters'] = 'ex1:"ez5_{0}_{1}"'.format(
+                cd_min, cd_max)
+
+            return
 
         # DuckDuckGo
 
-
         # Google
+        if self.ENGINE == 'Google':
+            # ex.) tbs=cdr:1,cd_min:10/1/2019,cd_max:10/31/2019
+            # 日付をGoogle検索のフォーマットに書き換える
+            cd_min = start.strftime("%m/%d/%Y")
+            cd_max = end.strftime("%m/%d/%Y")
 
+            # GETパラメータに日時データを追加
+            self.TEXT_PARAM['tbs'] = "cdr:1,cd_min:{0},cd_max:{1}".format(
+                cd_min, cd_max)
+
+            return
 
         # Yahoo
+        if self.ENGINE == 'Yahoo':
+            # ex.) day_from=2019/09/01&day_to=2019/09/30
+            # パラメータが2つ存在している
+            day_from = start.strftime("%Y/%m/%d")
+            day_to = end.strftime("%Y/%m/%d")
 
+            # GETパラメータに日時データを追加
+            self.TEXT_PARAM['day_from'] = day_from
+            self.TEXT_PARAM['day_to'] = day_to
 
-        None
-
+            return
 
     def set_proxy(self, proxy):
         ''' 検索時のProxyを定義 '''
-
         proxies = {
             'http': proxy,
             'https': proxy
@@ -199,7 +228,7 @@ class SearchEngine:
             return
 
         # 期間(start, end)が指定されている場合、各検索エンジンの該当パラメータに追加する
-        if start != '' or end != '':
+        if start is not None and end is not None:
             self.set_range(start, end)
 
         while True:
@@ -352,7 +381,8 @@ class SearchEngine:
         if self.ENGINE == 'Baidu':
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-            elinks = loop.run_until_complete(resolv_links(loop, self.session, elinks))
+            elinks = loop.run_until_complete(
+                resolv_links(loop, self.session, elinks))
 
         # dictをlistに入れていく
         links = list()

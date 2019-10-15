@@ -7,6 +7,7 @@
 # =======================================================
 
 import argparse
+from datetime import datetime
 import threading
 
 from . import bing, google, yahoo, baidu
@@ -18,6 +19,11 @@ __version__ = get_distribution('websearch').version
 
 # searchサブコマンドでの動作
 def command_search(args):
+    # args.startもしくはargs.endだけ指定されている場合
+    if (args.start is None and args.end is not None) or (args.start is not None and args.end is None):
+        print("期間を指定する場合は--start, --endの両方を指定してください")
+        return
+
     # if all
     if args.search_type == 'all':
         thread_baidu = threading.Thread(
@@ -143,11 +149,11 @@ def main():
         '(例: localhost:8050 => http://localhost:8050/render.html?url=https://www.google.co.jp/search?hogehoge...)'
     )
     parser_search.add_argument(
-        '--start', type=str, default='',
+        '--start', type=lambda s: datetime.strptime(s, '%Y-%m-%d'),
         help='期間指定(開始)'
     )
     parser_search.add_argument(
-        '--end', type=str, default='',
+        '--end', type=lambda s: datetime.strptime(s, '%Y-%m-%d'),
         help='期間指定(終了)'
     )
     parser_search.add_argument(

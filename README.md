@@ -36,6 +36,9 @@ Baiduは日本語の結果は大体帰ってこないので、基本中国語と
     # 検索件数指定
     websearch search -n 10 うんこ
 
+    # 検索期間指定(Baiduは対象外)
+    websearch search --start 2019-01-01 --end 2019-01-30 うんこ
+
     # Splash使用
     websearch search -S localhost:8050 うんこ
 
