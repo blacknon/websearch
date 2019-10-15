@@ -39,7 +39,8 @@ def search(args):
 
     # Google検索を実行
     result = google.search(args.query, type=search_type,
-                           maximum=args.num, debug=args.debug)
+                           maximum=args.num, debug=args.debug,
+                           start=args.start, end=args.end)
 
     # debug
     if args.debug:

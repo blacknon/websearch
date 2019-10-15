@@ -44,7 +44,8 @@ def search(args):
 
     # Bingでの検索を実行
     result = bing.search(args.query, type=search_type,
-                         maximum=args.num, debug=args.debug)
+                         maximum=args.num, debug=args.debug,
+                         start=args.start, end=args.end)
 
     # 仕様上、重複が発生するため除外
     result = get_unique_list(result)
