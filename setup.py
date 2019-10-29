@@ -25,7 +25,7 @@ def get_data_files():
 
         # 実行ユーザがrootかどうかでprefixを変更
         if os.geteuid() == 0:
-            # this is system install
+            ''' システムインストール時の挙動 '''
             if uname == 'Linux' and shell == 'bash':
                 prefix = '/'
             elif uname == 'Linux' and shell == 'zsh':
