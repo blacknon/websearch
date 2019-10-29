@@ -15,7 +15,8 @@ import setuptools
 # 補完ファイルインストール用関数
 def get_data_files():
 
-    def get_completion_install_location(shell):
+    # 補完ファイルのインストール先を取得する関数
+    def get_completefile_install_location(shell):
         uname = platform.uname()[0]
         is_root = (os.geteuid() == 0)
         prefix = ''
@@ -37,8 +38,8 @@ def get_data_files():
             raise ValueError('unsupported shell: {0}'.format(shell))
         return location
 
-    loc = {'bash': get_completion_install_location(shell='bash'),
-           'zsh': get_completion_install_location(shell='zsh')}
+    loc = {'bash': get_completefile_install_location(shell='bash'),
+           'zsh': get_completefile_install_location(shell='zsh')}
     files = dict(bash=['completion/websearch-completion.bash'],
                  zsh=['completion/websearch-completion.bash',
                       'completion/_websearch'])
