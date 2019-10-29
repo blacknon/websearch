@@ -17,10 +17,14 @@ def get_data_files():
 
     # 補完ファイルのインストール先を取得する関数
     def get_completefile_install_location(shell):
-        uname = platform.uname()[0]
-        is_root = (os.geteuid() == 0)
+        # pathのprefixを定義
         prefix = ''
-        if is_root:
+
+        # osの種類を取得
+        uname = platform.uname()[0]
+
+        # 実行ユーザがrootかどうかでprefixを変更
+        if os.geteuid() == 0:
             # this is system install
             if uname == 'Linux' and shell == 'bash':
                 prefix = '/'
@@ -30,19 +34,34 @@ def get_data_files():
                 prefix = '/'
             elif uname == 'Darwin' and shell == 'zsh':
                 prefix = '/usr'
+
+        # shellの種類に応じてインストール先のlocationを変更
         if shell == 'bash':
             location = os.path.join(prefix, 'etc/bash_completion.d')
         elif shell == 'zsh':
             location = os.path.join(prefix, 'share/zsh/site-functions')
         else:
             raise ValueError('unsupported shell: {0}'.format(shell))
+
+        # locationを返す
         return location
 
-    loc = {'bash': get_completefile_install_location(shell='bash'),
-           'zsh': get_completefile_install_location(shell='zsh')}
-    files = dict(bash=['completion/websearch-completion.bash'],
-                 zsh=['completion/websearch-completion.bash',
-                      'completion/_websearch'])
+    # locationをdict形式で取得する
+    loc = {
+        'bash': get_completefile_install_location('bash'),
+        'zsh': get_completefile_install_location('zsh')
+    }
+
+    # 対象となるファイルをdict形式で指定
+    files = dict(
+        bash=['completion/websearch-completion.bash'],
+        zsh=[
+            'completion/websearch-completion.bash',
+            'completion/_websearch'
+        ]
+    )
+
+    # data_files形式でreturn
     data_files = []
     data_files.append((loc['bash'], files['bash']))
     data_files.append((loc['zsh'], files['zsh']))
