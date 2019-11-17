@@ -132,16 +132,16 @@ def main():
         'search', help='search mode. see `search -h`')
     parser_search.add_argument(
         'query', action='store', type=str, help='query')
-    parser_search.add_argument('-t', '--search_type', default='google',
-                               choices=[
-                                   'baidu',
-                                   'bing',
-                                   'google',
-                                   'yahoo',
-                                   'all'
-                               ],
-                               nargs='+',
-                               type=str, help='検索エンジンを指定')
+    parser_search.add_argument(
+        '-t', '--search_type', default='google',
+        choices=[
+            'baidu',
+            'bing',
+            'google',
+            'yahoo',
+            'all'
+        ],
+        nargs='+', type=str, help='検索エンジンを指定')
     parser_search.add_argument(
         '-i', '--image', action='store_true',
         help='画像検索を行う(現在はGoogleのみ利用可能.Splash経由だとエラーになるので注意)'
@@ -186,16 +186,16 @@ def main():
         'suggest', help='suggest mode. see `suggest -h`')
     parser_suggest.add_argument(
         'query', action='store', type=str, help='query')
-    parser_suggest.add_argument('-t', '--search_type', default='google',
-                                choices=[
-                                    'baidu',
-                                    'bing',
-                                    'google',
-                                    'yahoo',
-                                    'all'
-                                ],
-                                nargs='+',
-                                type=str, help='検索エンジンを指定')
+    parser_suggest.add_argument(
+        '-t', '--search_type', default='google',
+        choices=[
+            'baidu',
+            'bing',
+            'google',
+            'yahoo',
+            'all'
+        ],
+        nargs='+', type=str, help='検索エンジンを指定')
     parser_suggest.add_argument(
         '-P', '--proxy', type=str,
         help='プロキシサーバ(例:socks5://hogehoge:8080, https://fugafuga:18080)')
