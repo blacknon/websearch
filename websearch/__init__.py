@@ -24,82 +24,100 @@ def command_search(args):
         print("期間を指定する場合は--start, --endの両方を指定してください")
         return
 
-    # if all
-    if args.search_type == 'all':
-        thread_baidu = threading.Thread(
-            target=baidu.search, args=([args]))
-        thread_bing = threading.Thread(
-            target=bing.search, args=([args]))
-        thread_google = threading.Thread(
-            target=google.search, args=([args]))
-        thread_yahoo = threading.Thread(
-            target=yahoo.search, args=([args]))
+    for st in args.search_type:
+        # if all
+        if st == 'all':
+            thread_baidu = threading.Thread(
+                target=baidu.search, args=([args]))
+            thread_bing = threading.Thread(
+                target=bing.search, args=([args]))
+            thread_google = threading.Thread(
+                target=google.search, args=([args]))
+            thread_yahoo = threading.Thread(
+                target=yahoo.search, args=([args]))
 
-        thread_baidu.start()
-        thread_bing.start()
-        thread_google.start()
-        thread_yahoo.start()
-        return
+            thread_baidu.start()
+            thread_bing.start()
+            thread_google.start()
+            thread_yahoo.start()
+            continue
 
-    # if baidu
-    if args.search_type == 'baidu':
-        baidu.search(args)
-        return
+        # if baidu
+        if st == 'baidu':
+            thread_baidu = threading.Thread(
+                target=baidu.search, args=([args]))
+            thread_baidu.start()
+            continue
 
-    # if bing
-    if args.search_type == 'bing':
-        bing.search(args)
-        return
+        # if bing
+        if st == 'bing':
+            thread_bing = threading.Thread(
+                target=bing.search, args=([args]))
+            thread_bing.start()
+            continue
 
-    # if google
-    if args.search_type == 'google':
-        google.search(args)
-        return
+        # if google
+        if st == 'google':
+            thread_google = threading.Thread(
+                target=google.search, args=([args]))
+            thread_google.start()
+            continue
 
-    # if yahoo
-    if args.search_type == 'yahoo':
-        yahoo.search(args)
-        return
+        # if yahoo
+        if st == 'yahoo':
+            thread_yahoo = threading.Thread(
+                target=yahoo.search, args=([args]))
+            thread_yahoo.start()
+            continue
 
 
 # suggestサブコマンドでの動作
 def command_suggest(args):
-    # if all
-    if args.search_type == 'all':
-        thread_baidu = threading.Thread(
-            target=baidu.suggest, args=([args]))
-        thread_bing = threading.Thread(
-            target=bing.suggest, args=([args]))
-        thread_google = threading.Thread(
-            target=google.suggest, args=([args]))
-        thread_yahoo = threading.Thread(
-            target=yahoo.suggest, args=([args]))
+    for st in args.search_type:
+        # if all
+        if st == 'all':
+            thread_baidu = threading.Thread(
+                target=baidu.suggest, args=([args]))
+            thread_bing = threading.Thread(
+                target=bing.suggest, args=([args]))
+            thread_google = threading.Thread(
+                target=google.suggest, args=([args]))
+            thread_yahoo = threading.Thread(
+                target=yahoo.suggest, args=([args]))
 
-        thread_baidu.start()
-        thread_bing.start()
-        thread_google.start()
-        thread_yahoo.start()
-        return
+            thread_baidu.start()
+            thread_bing.start()
+            thread_google.start()
+            thread_yahoo.start()
+            continue
 
-    # if baidu
-    if args.search_type == 'baidu':
-        baidu.suggest(args)
-        return
+        # if baidu
+        if st == 'baidu':
+            thread_baidu = threading.Thread(
+                target=baidu.suggest, args=([args]))
+            thread_baidu.start()
+            continue
 
-    # if bing
-    if args.search_type == 'bing':
-        bing.suggest(args)
-        return
+        # if bing
+        if st == 'bing':
+            thread_bing = threading.Thread(
+                target=bing.suggest, args=([args]))
+            thread_bing.start()
+            continue
 
-    # if google
-    if args.search_type == 'google':
-        google.suggest(args)
-        return
+        # if google
+        if st == 'google':
+            thread_google = threading.Thread(
+                target=google.suggest, args=([args]))
+            thread_google.start()
+            continue
 
-    # if yahoo
-    if args.search_type == 'yahoo':
-        yahoo.suggest(args)
-        return
+        # if yahoo
+        if st == 'yahoo':
+            thread_yahoo = threading.Thread(
+                target=yahoo.suggest, args=([args]))
+            thread_yahoo.start()
+            continue
 
 
 # main
@@ -110,7 +128,6 @@ def main():
     subparsers = parser.add_subparsers()
 
     # search
-    # TODO(blacknon): 日付の範囲指定を追加する
     parser_search = subparsers.add_parser(
         'search', help='search mode. see `search -h`')
     parser_search.add_argument(
@@ -123,6 +140,7 @@ def main():
                                    'yahoo',
                                    'all'
                                ],
+                               nargs='+',
                                type=str, help='検索エンジンを指定')
     parser_search.add_argument(
         '-i', '--image', action='store_true',
@@ -176,6 +194,7 @@ def main():
                                     'yahoo',
                                     'all'
                                 ],
+                                nargs='+',
                                 type=str, help='検索エンジンを指定')
     parser_suggest.add_argument(
         '-P', '--proxy', type=str,
