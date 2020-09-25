@@ -18,14 +18,19 @@ def search(args):
     google = SearchEngine()
     google.set('google')
 
-    # proxy
-    if args.proxy != '':
+    # Proxy
+    if args.proxy != '' and args.splash == '':
         google.set_proxy(args.proxy)
 
     # Splush
-    # TODO(blacknon): Proxyへの対応
     if args.splash != '':
-        google.SPLASH_URL = 'http://' + args.splash + '/render.html?url='
+        google.SPLASH_URL = 'http://' + args.splash + '/render.html?'
+
+        # Proxyが指定されている場合
+        if args.proxy != '':
+            google.SPLASH_URL = google.SPLASH_URL + 'proxy=' + args.proxy + '&'
+
+        google.SPLASH_URL = google.SPLASH_URL + 'url='
 
     # Header
     header = '[GoogleSearch]: '

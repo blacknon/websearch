@@ -19,13 +19,18 @@ def search(args):
     baidu.set('baidu')
 
     # proxy
-    if args.proxy != '':
+    if args.proxy != '' and args.splash == '':
         baidu.set_proxy(args.proxy)
 
     # Splush
-    # TODO(blacknon): Proxyへの対応
     if args.splash != '':
-        baidu.SPLASH_URL = 'http://' + args.splash + '/render.html?url='
+        baidu.SPLASH_URL = 'http://' + args.splash + '/render.html?'
+
+        # Proxyが指定されている場合
+        if args.proxy != '':
+            baidu.SPLASH_URL = baidu.SPLASH_URL + 'proxy=' + args.proxy + '&'
+
+        baidu.SPLASH_URL = baidu.SPLASH_URL + 'url='
 
     # Header
     header = '[BaiduSearch]: '
