@@ -21,14 +21,19 @@ def search(args):
     bing = SearchEngine()
     bing.set('bing')
 
-    # proxy
-    if args.proxy != '':
+    # Proxy
+    if args.proxy != '' and args.splash == '':
         bing.set_proxy(args.proxy)
 
     # Splush
-    # TODO(blacknon): Proxyへの対応
     if args.splash != '':
-        bing.SPLASH_URL = 'http://' + args.splash + '/render.html?url='
+        bing.SPLASH_URL = 'http://' + args.splash + '/render.html?'
+
+        # Proxyが指定されている場合
+        if args.proxy != '':
+            bing.SPLASH_URL = bing.SPLASH_URL + 'proxy=' + args.proxy + '&'
+
+        bing.SPLASH_URL = bing.SPLASH_URL + 'url='
 
     # Header
     header = '[BingSearch]: '

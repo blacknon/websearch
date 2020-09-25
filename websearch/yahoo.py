@@ -18,14 +18,19 @@ def search(args):
     yahoo = SearchEngine()
     yahoo.set('yahoo')
 
-    # proxy
-    if args.proxy != '':
+    # Proxy
+    if args.proxy != '' and args.splash == '':
         yahoo.set_proxy(args.proxy)
 
     # Splush
-    # TODO(blacknon): Proxyへの対応
     if args.splash != '':
-        yahoo.SPLASH_URL = 'http://' + args.splash + '/render.html?url='
+        yahoo.SPLASH_URL = 'http://' + args.splash + '/render.html?'
+
+        # Proxyが指定されている場合
+        if args.proxy != '':
+            yahoo.SPLASH_URL = yahoo.SPLASH_URL + 'proxy=' + args.proxy + '&'
+
+        yahoo.SPLASH_URL = yahoo.SPLASH_URL + 'url='
 
     # Header
     header = '[YahooSearch]: '
