@@ -12,9 +12,11 @@ Baiduは日本語の結果は大体帰ってこないので、基本中国語と
 
 ## Install
 
+    ```bash
     git clone git@github.com:blacknon/websearch.git
     cd websearch
     pip install -U ./
+    ```
 
 
 ## Usage
@@ -23,6 +25,7 @@ Baiduは日本語の結果は大体帰ってこないので、基本中国語と
 
 #### search
 
+    ```bash
     # 検索(Google検索、デフォルト上限は300件)
     websearch search うんこ
     websearch search site:unko.org
@@ -45,9 +48,15 @@ Baiduは日本語の結果は大体帰ってこないので、基本中国語と
     # Proxy使用
     websearch search -P socks5://localhost:8000 うんこ
 
+    # SplashからProxy使用(docker-machineだと疎通が取れないので不可)
+    websearch search　-S localhost:8050 -P socks5://localhost:8000 うんこ # Linuxの場合
+    websearch search　-S localhost:8050 -P socks5://host.docker.internal:8000 うんこ # Docker for Macの場合
+    ```
+
 
 #### suggest
 
+    ```bash
     # サジェスト検索(Google)
     websearch suggest うんこ
 
@@ -64,25 +73,28 @@ Baiduは日本語の結果は大体帰ってこないので、基本中国語と
 
     # Proxy使用
     websearch suggest -P socks5://localhost:8000 うんこ
+    ```
 
 
 ### lib
 
+    ```python
     from websearch import search
-    
-    
+
+
     # google class
     google = search.SearchEngine()
     google.set('google')
-    
+
     # Google検索を実行
     search_result = google.search('うんこ')
-    
+
     # GoogleでのSuggestを取得
     suggest_result = google.suggest('うんこ')
-    
+
     print(search_result)
     print(suggest_result)
+    ```
 
 
 ## Note
@@ -92,8 +104,13 @@ Baiduは日本語の結果は大体帰ってこないので、基本中国語と
 基本的には[Splash](https://github.com/scrapinghub/splash)を利用したほうがよい。\
 以下、`Docker`のコンテナpull及び起動コマンド。
 
+    ```bash
     docker pull scrapinghub/splash
     docker run -d --restart=always -it -p 8050:8050 scrapinghub/splash --disable-private-mode
+
+    # Linuxの場合はnetworkをhostにしたほうがいい(Proxyを経由させるため)
+    docker run -d --restart=always --network="host" -it -p 8050:8050 scrapinghub/splash --disable-private-mode
+    ```
 
 
 ### 参考
