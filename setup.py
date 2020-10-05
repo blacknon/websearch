@@ -71,7 +71,7 @@ def get_data_files():
 if __name__ == "__main__":
     setuptools.setup(
         name='websearch',
-        version='0.1.4',
+        version='0.1.5',
         install_requires=[
             'argparse',
             'bs4',

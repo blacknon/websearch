@@ -121,8 +121,8 @@ class SearchEngine:
                 'oe': 'utf-8',
                 'client': 'firefox'
             }
-            self.SOUP_SELECT_URL = '.rc > .r > a'
-            self.SOUP_SELECT_TITLE = '.rc > .r > a > .LC20lb'
+            self.SOUP_SELECT_URL = '.rc > .yuRUbf > a'
+            self.SOUP_SELECT_TITLE = '.rc > .yuRUbf > a > .LC20lb'
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
             return
 
@@ -152,8 +152,10 @@ class SearchEngine:
                 'appid': 'dj0zaiZpPVU5MGlSOUZ4cHVLbCZzPWNvbnN1bWVyc2VjcmV0Jng9ZGQ-',
                 'output': 'json',
             }
-            self.SOUP_SELECT_URL = 'h3 > a'
-            self.SOUP_SELECT_TITLE = 'h3 > a'
+            # self.SOUP_SELECT_URL = 'h3 > a'
+            self.SOUP_SELECT_URL = '.sw-CardBase > .sw-Card > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > a'
+            # self.SOUP_SELECT_TITLE = 'h3 > a'
+            self.SOUP_SELECT_TITLE = '.sw-CardBase > .sw-Card > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > a > h3'
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
             return
 
