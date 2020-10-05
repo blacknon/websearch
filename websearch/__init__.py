@@ -193,6 +193,9 @@ def main():
         ],
         nargs='+', type=str, help='検索エンジンを指定')
     parser_suggest.add_argument(
+        '-P', '--proxy', type=str,
+        help='プロキシサーバ(例:socks5://hogehoge:8080, https://fugafuga:18080)')
+    parser_suggest.add_argument(
         '--jap', action='store_true', help='日本語の文字を検索キーワードに追加してサジェストを取得'
     )
     parser_suggest.add_argument(
