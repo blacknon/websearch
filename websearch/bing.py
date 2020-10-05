@@ -42,10 +42,6 @@ def search(args):
 
     # 検索タイプを設定(テキスト or 画像)
     search_type = 'text'
-    if args.image:
-        print('Sorry, Now development in', file=sys.stderr)  # debug
-        exit()  # debug
-        search_type = 'image'
 
     # Bingでの検索を実行
     result = bing.search(args.query, type=search_type,

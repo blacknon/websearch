@@ -39,8 +39,6 @@ def search(args):
 
     # 検索タイプを設定(テキスト or 画像)
     search_type = 'text'
-    if args.image:
-        search_type = 'image'
 
     # Google検索を実行
     result = google.search(args.query, type=search_type,
