@@ -153,9 +153,9 @@ class SearchEngine:
                 'output': 'json',
             }
             # self.SOUP_SELECT_URL = 'h3 > a'
-            self.SOUP_SELECT_URL = '.sw-CardBase > .sw-Card > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > a'
+            self.SOUP_SELECT_URL = '.sw-CardBase > .sw-Card > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > .sw-Card__titleInner'
             # self.SOUP_SELECT_TITLE = 'h3 > a'
-            self.SOUP_SELECT_TITLE = '.sw-CardBase > .sw-Card > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > a > h3'
+            self.SOUP_SELECT_TITLE = '.sw-CardBase > .sw-Card > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > .sw-Card__titleInner > h3'
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
             return
 
