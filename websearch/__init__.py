@@ -10,7 +10,7 @@ import argparse
 from datetime import datetime
 import threading
 
-from . import bing, google, yahoo, baidu
+from . import baidu, bing, duckduckgo, google, yahoo
 from pkg_resources import get_distribution
 
 # version (setup.pyから取得してくる)
@@ -31,6 +31,8 @@ def command_search(args):
                 target=baidu.search, args=([args, True]))
             thread_bing = threading.Thread(
                 target=bing.search, args=([args, True]))
+            thread_duckduckgo = threading.Thread(
+                target=duckduckgo.search, args=([args, True]))
             thread_google = threading.Thread(
                 target=google.search, args=([args, True]))
             thread_yahoo = threading.Thread(
@@ -38,6 +40,7 @@ def command_search(args):
 
             thread_baidu.start()
             thread_bing.start()
+            thread_duckduckgo.start()
             thread_google.start()
             thread_yahoo.start()
             continue
@@ -54,6 +57,13 @@ def command_search(args):
             thread_bing = threading.Thread(
                 target=bing.search, args=([args, True]))
             thread_bing.start()
+            continue
+
+        # if duckduckgo
+        if st == 'duckduckgo':
+            thread_duckduckgo = threading.Thread(
+                target=duckduckgo.search, args=([args, True]))
+            thread_duckduckgo.start()
             continue
 
         # if google
@@ -105,6 +115,13 @@ def command_suggest(args):
             thread_bing.start()
             continue
 
+        # if duckduckgo
+        if st == 'duckduckgo':
+            thread_duckduckgo = threading.Thread(
+                target=duckduckgo.suggest, args=([args, True]))
+            thread_duckduckgo.start()
+            continue
+
         # if google
         if st == 'google':
             thread_google = threading.Thread(
@@ -137,6 +154,7 @@ def main():
         choices=[
             'baidu',
             'bing',
+            'duckduckgo',
             'google',
             'yahoo',
             'all'
@@ -187,6 +205,7 @@ def main():
         choices=[
             'baidu',
             'bing',
+            'duckduckgo',
             'google',
             'yahoo',
             'all'

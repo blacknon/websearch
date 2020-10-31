@@ -94,6 +94,15 @@ class SearchEngine:
             return
 
         # DuckDuckGo
+        #   ※ DuckDuckGoの場合、検索結果の取得方法が特殊なため作りが少々異なる
+        if engine == 'duckduckgo':
+            self.ENGINE = 'DuckDuckGo'
+            self.SEARCH_URL = 'https://duckduckgo.com/d.js'
+            self.TEXT_PARAM = {
+                'q': '',  # 検索キーワード
+                'l': 'ja_jp',  # language
+                's': 0  # 取得開始件数
+            }
 
         # Google
         if engine == 'google':
@@ -152,8 +161,8 @@ class SearchEngine:
                 'appid': 'dj0zaiZpPVU5MGlSOUZ4cHVLbCZzPWNvbnN1bWVyc2VjcmV0Jng9ZGQ-',
                 'output': 'json',
             }
-            self.SOUP_SELECT_URL = '.Contents__innerGroupBody > .sw-CardBase > .Algo > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > .sw-Card__titleInner > a'
-            self.SOUP_SELECT_TITLE = '.Contents__innerGroupBody > .sw-CardBase > .Algo > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > .sw-Card__titleInner > h3'
+            self.SOUP_SELECT_URL = '.Contents__innerGroupBody > .sw-CardBase > .Algo > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > a'
+            self.SOUP_SELECT_TITLE = '.Contents__innerGroupBody > .sw-CardBase > .Algo > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > a > h3'
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
             return
 
@@ -232,47 +241,52 @@ class SearchEngine:
         if start is not None and end is not None:
             self.set_range(start, end)
 
-        while True:
-            q = next(query)
+        # DuckDuckGoの場合、通常の検索結果取得とは異なるため分岐
+        if self.ENGINE == 'DuckDuckGo':
+            result = self.__search_duckduckgo(query, maximum, debug=debug)
 
-            # debug
-            if debug is True:
-                print(Color.CYAN +
-                      '[target_url]' + Color.END, file=sys.stderr)
-                print(Color.CYAN + q + Color.END, file=sys.stderr)
+        # Baidu, Bing, Google, Yahooの場合
+        else:
+            while True:
+                q = next(query)
 
-            # 検索
-            html = self.session.get(q).text
+                # debug
+                if debug is True:
+                    print(Color.CYAN +
+                          '[target_url]' + Color.END, file=sys.stderr)
+                    print(Color.CYAN + q + Color.END, file=sys.stderr)
 
-            # debug
-            if debug is True:
-                print(Color.PURPLE +
-                      '[Response]' + Color.END, file=sys.stderr)
-                print(Color.PURPLE + html +
-                      Color.END, file=sys.stderr)
+                # 検索
+                html = self.session.get(q).text
 
-            # 検索結果をパース処理する
-            links = self.get_links(html, type)
+                # debug
+                if debug is True:
+                    print(Color.PURPLE +
+                          '[Response]' + Color.END, file=sys.stderr)
+                    print(Color.PURPLE + html +
+                          Color.END, file=sys.stderr)
 
-            # 検索結果の追加
-            if not len(links):
-                if cmd is True:
-                    print('-> No more links', self.ENGINE, file=sys.stderr)
-                break
-            elif len(links) > maximum - total:
-                result += links[:maximum - total]
-                break
-            else:
-                result += links
-                total += len(links)
-            sleep(0.5)
+                # 検索結果をパース処理する
+                links = self.get_links(html, type)
+
+                # 検索結果の追加
+                if not len(links):
+                    if cmd is True:
+                        print('-> No more links', self.ENGINE, file=sys.stderr)
+                    break
+                elif len(links) > maximum - total:
+                    result += links[:maximum - total]
+                    break
+                else:
+                    result += links
+                    total += len(links)
+                sleep(0.5)
+
         if cmd is True:
             print('-> Finally got', str(len(result)),
                   'links', self.ENGINE, file=sys.stderr)
-        return result
 
-    def search_duckduckgo():
-        None
+        return result
 
     def suggest(self, keyword, jap=False, alph=False, num=False, cmd=False):
         ''' サジェスト取得 '''
@@ -331,7 +345,9 @@ class SearchEngine:
     def query_gen(self, keyword, type):
         ''' 検索クエリの生成 '''
         page = 0
+
         while True:
+            # テキスト検索
             if type == 'text':
                 if self.ENGINE == 'Baidu':
                     self.TEXT_PARAM['wd'] = keyword
@@ -341,6 +357,9 @@ class SearchEngine:
                     self.TEXT_PARAM['q'] = keyword
                     self.TEXT_PARAM['first'] = str(page * 100)
 
+                if self.ENGINE == 'DuckDuckGo':
+                    self.TEXT_PARAM['q'] = keyword
+
                 elif self.ENGINE == 'Google':
                     self.TEXT_PARAM['q'] = keyword
                     self.TEXT_PARAM['start'] = str(page * 100)
@@ -349,8 +368,10 @@ class SearchEngine:
                     self.TEXT_PARAM['p'] = keyword
                     self.TEXT_PARAM['b'] = str(page * 10)
 
+                # パラメータをURLエンコード
                 params = parse.urlencode(self.TEXT_PARAM)
 
+            # イメージ検索(いまのところ動作させてない)
             elif type == 'image':
                 self.IMAGE_PARAM['q'] = keyword
                 self.IMAGE_PARAM['ijn'] = str(page * 100)
@@ -401,6 +422,63 @@ class SearchEngine:
                     d = {"link": link}
                 links.append(d)
                 n += 1
+
+        return links
+
+    def __search_duckduckgo(self, query, maximum, debug=False):
+        '''
+          DuckDuckGoの検索用関数
+            - DuckDuckGoはJavascriptで検索結果を取得しててちょっとめんどくさいため別関数を用意。
+            - 初回のqueryはSearchEngine.query_genで生成する
+        '''
+        url = next(query)
+        links = list()
+        while True:
+            # debug
+            if debug is True:
+                print(Color.CYAN + '[target_url]' + Color.END, file=sys.stderr)
+                print(Color.CYAN + url + Color.END, file=sys.stderr)
+
+            # 検索結果(javascriptのコード)を取得
+            js_text = self.session.get(url).text
+
+            # 加工してdictとして扱えるようにする
+            r = re.findall(
+                r"DDG\.pageLayout\.load\(\'d\',(.+)\]\)\;", js_text
+            )
+            try:
+                r_dict = json.loads(r[0]+"]")
+            except Exception:
+                break
+
+            for r_data in r_dict:
+                if "u" in r_data:
+                    d = {
+                        "link": r_data["u"],
+                        "title": BeautifulSoup(
+                            r_data["t"], "lxml").text
+                    }
+                    links.append(d)
+
+                elif "n" in r_data:
+                    base_uri = '{uri.scheme}://{uri.netloc}'.format(
+                        uri=parse.urlparse(self.SEARCH_URL)
+                    )
+                    url = base_uri + r_data["n"]
+
+                else:
+                    url = ""
+
+            if url == "":
+                break
+
+            if len(links) >= maximum:
+                break
+
+            sleep(0.5)
+
+        if len(links) > maximum:
+            links = links[:maximum]
 
         return links
 
