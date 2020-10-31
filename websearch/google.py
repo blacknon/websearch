@@ -13,7 +13,7 @@ from .common import Color
 
 
 # googleでの検索
-def search(args):
+def search(args, cmd=False):
     # google class
     google = SearchEngine()
     google.set('google')
@@ -43,7 +43,8 @@ def search(args):
     # Google検索を実行
     result = google.search(args.query, type=search_type,
                            maximum=args.num, debug=args.debug,
-                           start=args.start, end=args.end)
+                           start=args.start, end=args.end,
+                           cmd=cmd)
 
     # debug
     if args.debug:
@@ -73,7 +74,7 @@ def search(args):
 
 
 # googleでのsuggest取得
-def suggest(args):
+def suggest(args, cmd=False):
     # engine
     google = SearchEngine()
     google.set('google')
@@ -88,7 +89,8 @@ def suggest(args):
         args.query,
         jap=args.jap,
         alph=args.alph,
-        num=args.num
+        num=args.num,
+        cmd=cmd
     )
 
     for words in result.values():

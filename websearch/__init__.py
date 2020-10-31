@@ -28,13 +28,13 @@ def command_search(args):
         # if all
         if st == 'all':
             thread_baidu = threading.Thread(
-                target=baidu.search, args=([args]))
+                target=baidu.search, args=([args, True]))
             thread_bing = threading.Thread(
-                target=bing.search, args=([args]))
+                target=bing.search, args=([args, True]))
             thread_google = threading.Thread(
-                target=google.search, args=([args]))
+                target=google.search, args=([args, True]))
             thread_yahoo = threading.Thread(
-                target=yahoo.search, args=([args]))
+                target=yahoo.search, args=([args, True]))
 
             thread_baidu.start()
             thread_bing.start()
@@ -45,28 +45,28 @@ def command_search(args):
         # if baidu
         if st == 'baidu':
             thread_baidu = threading.Thread(
-                target=baidu.search, args=([args]))
+                target=baidu.search, args=([args, True]))
             thread_baidu.start()
             continue
 
         # if bing
         if st == 'bing':
             thread_bing = threading.Thread(
-                target=bing.search, args=([args]))
+                target=bing.search, args=([args, True]))
             thread_bing.start()
             continue
 
         # if google
         if st == 'google':
             thread_google = threading.Thread(
-                target=google.search, args=([args]))
+                target=google.search, args=([args, True]))
             thread_google.start()
             continue
 
         # if yahoo
         if st == 'yahoo':
             thread_yahoo = threading.Thread(
-                target=yahoo.search, args=([args]))
+                target=yahoo.search, args=([args, True]))
             thread_yahoo.start()
             continue
 
@@ -77,13 +77,13 @@ def command_suggest(args):
         # if all
         if st == 'all':
             thread_baidu = threading.Thread(
-                target=baidu.suggest, args=([args]))
+                target=baidu.suggest, args=([args, True]))
             thread_bing = threading.Thread(
-                target=bing.suggest, args=([args]))
+                target=bing.suggest, args=([args, True]))
             thread_google = threading.Thread(
-                target=google.suggest, args=([args]))
+                target=google.suggest, args=([args, True]))
             thread_yahoo = threading.Thread(
-                target=yahoo.suggest, args=([args]))
+                target=yahoo.suggest, args=([args, True]))
 
             thread_baidu.start()
             thread_bing.start()
@@ -94,28 +94,28 @@ def command_suggest(args):
         # if baidu
         if st == 'baidu':
             thread_baidu = threading.Thread(
-                target=baidu.suggest, args=([args]))
+                target=baidu.suggest, args=([args, True]))
             thread_baidu.start()
             continue
 
         # if bing
         if st == 'bing':
             thread_bing = threading.Thread(
-                target=bing.suggest, args=([args]))
+                target=bing.suggest, args=([args, True]))
             thread_bing.start()
             continue
 
         # if google
         if st == 'google':
             thread_google = threading.Thread(
-                target=google.suggest, args=([args]))
+                target=google.suggest, args=([args, True]))
             thread_google.start()
             continue
 
         # if yahoo
         if st == 'yahoo':
             thread_yahoo = threading.Thread(
-                target=yahoo.suggest, args=([args]))
+                target=yahoo.suggest, args=([args, True]))
             thread_yahoo.start()
             continue
 

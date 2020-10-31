@@ -13,7 +13,9 @@ from .common import Color
 
 
 # baiduでの検索
-def search(args):
+def search(args, cmd=False):
+    print(cmd)
+
     # baidu class
     baidu = SearchEngine()
     baidu.set('baidu')
@@ -42,7 +44,8 @@ def search(args):
 
     # baidu検索を実行
     result = baidu.search(args.query, type=search_type,
-                          maximum=args.num, debug=args.debug)
+                          maximum=args.num, debug=args.debug,
+                          cmd=cmd)
 
     # debug
     if args.debug:
@@ -72,7 +75,7 @@ def search(args):
 
 
 # baiduでのsuggest取得
-def suggest(args):
+def suggest(args, cmd=False):
     # engine
     baidu = SearchEngine()
     baidu.set('baidu')
@@ -87,7 +90,8 @@ def suggest(args):
         args.query,
         jap=args.jap,
         alph=args.alph,
-        num=args.num
+        num=args.num,
+        cmd=cmd
     )
 
     for words in result.values():
