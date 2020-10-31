@@ -33,9 +33,13 @@ class SearchEngine:
         self.SPLASH_URL = ''
 
         # requests.sessionの作成
+        # TODO(blacknon): Headerをoption等で切り替えできるようにする
         self.session = requests.session()
         self.session.headers.update(
-            {'User-Agent': useragent}
+            {
+                'User-Agent': useragent,
+                'Accept-Language': 'ja,en-US;q=0.7,en;q=0.3'
+            }
         )
 
     def set(self, engine):
@@ -98,10 +102,15 @@ class SearchEngine:
         if engine == 'duckduckgo':
             self.ENGINE = 'DuckDuckGo'
             self.SEARCH_URL = 'https://duckduckgo.com/d.js'
+            self.SUGGEST_URL = 'https://duckduckgo.com/ac/'
             self.TEXT_PARAM = {
                 'q': '',  # 検索キーワード
                 'l': 'ja_jp',  # language
                 's': 0  # 取得開始件数
+            }
+            self.SUGGEST_PARAM = {
+                'q': '',      # 検索キーワード
+                'kl': 'wt-wt'   #
             }
 
         # Google
@@ -320,6 +329,15 @@ class SearchEngine:
                 elements = soup.select('ul > li')
                 suggests[char if char == '' else char[-1]] = [e['query']
                                                               for e in elements]
+
+            elif self.ENGINE == 'DuckDuckGo':  # DuckDuckGo
+                self.SUGGEST_PARAM['q'] = keyword + char
+                params = parse.urlencode(self.SUGGEST_PARAM)
+
+                # レスポンスを取得
+                res = self.session.get(self.SUGGEST_URL + '?' + params)
+                suggests[char if char == '' else char[-1]] = [e['phrase']
+                                                              for e in res.json()]
 
             elif self.ENGINE == 'Google':  # Google
                 self.SUGGEST_PARAM['q'] = keyword + char
