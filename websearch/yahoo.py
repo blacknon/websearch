@@ -13,8 +13,8 @@ from .common import Color
 
 
 # yahooでの検索
-def search(args):
-    # google class
+def search(args, cmd=False):
+    # yahoo class
     yahoo = SearchEngine()
     yahoo.set('yahoo')
 
@@ -43,7 +43,8 @@ def search(args):
     # Yahoo検索を実行
     result = yahoo.search(args.query, type=search_type,
                           maximum=args.num, debug=args.debug,
-                          start=args.start, end=args.end)
+                          start=args.start, end=args.end,
+                          cmd=cmd)
 
     # debug
     if args.debug:
@@ -73,7 +74,7 @@ def search(args):
 
 
 # yahooでのsuggest取得
-def suggest(args):
+def suggest(args, cmd=False):
     # engine
     yahoo = SearchEngine()
     yahoo.set('yahoo')
@@ -83,12 +84,13 @@ def suggest(args):
     if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty()):
         header = Color.YELLOW + header + Color.END
 
-    # GoogleでのSuggestを取得
+    # YahooでのSuggestを取得
     result = yahoo.suggest(
         args.query,
         jap=args.jap,
         alph=args.alph,
-        num=args.num
+        num=args.num,
+        cmd=cmd
     )
     for words in result.values():
         for w in words:

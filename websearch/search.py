@@ -152,10 +152,8 @@ class SearchEngine:
                 'appid': 'dj0zaiZpPVU5MGlSOUZ4cHVLbCZzPWNvbnN1bWVyc2VjcmV0Jng9ZGQ-',
                 'output': 'json',
             }
-            # self.SOUP_SELECT_URL = 'h3 > a'
-            self.SOUP_SELECT_URL = '.sw-CardBase > .sw-Card > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > .sw-Card__titleInner'
-            # self.SOUP_SELECT_TITLE = 'h3 > a'
-            self.SOUP_SELECT_TITLE = '.sw-CardBase > .sw-Card > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > .sw-Card__titleInner > h3'
+            self.SOUP_SELECT_URL = '.Contents__innerGroupBody > .sw-CardBase > .Algo > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > .sw-Card__titleInner > a'
+            self.SOUP_SELECT_TITLE = '.Contents__innerGroupBody > .sw-CardBase > .Algo > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > .sw-Card__titleInner > h3'
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
             return
 
@@ -218,10 +216,11 @@ class SearchEngine:
         }
         self.session.proxies = proxies
 
-    def search(self, keyword, type='text', maximum=100, parallel=False, debug=False, start='', end=''):
+    def search(self, keyword, type='text', maximum=100, parallel=False, debug=False, start='', end='', cmd=False):
         ''' 検索 '''
-        print(self.ENGINE, type.capitalize(),
-              'Search:', keyword, file=sys.stderr)
+        if cmd is True:
+            print(self.ENGINE, type.capitalize(),
+                  'Search:', keyword, file=sys.stderr)
         result, total = [], 0
         query = self.query_gen(keyword, type)
 
@@ -257,7 +256,8 @@ class SearchEngine:
 
             # 検索結果の追加
             if not len(links):
-                print('-> No more links', self.ENGINE, file=sys.stderr)
+                if cmd is True:
+                    print('-> No more links', self.ENGINE, file=sys.stderr)
                 break
             elif len(links) > maximum - total:
                 result += links[:maximum - total]
@@ -266,12 +266,15 @@ class SearchEngine:
                 result += links
                 total += len(links)
             sleep(0.5)
-
-        print('-> Finally got', str(len(result)),
-              'links', self.ENGINE, file=sys.stderr)
+        if cmd is True:
+            print('-> Finally got', str(len(result)),
+                  'links', self.ENGINE, file=sys.stderr)
         return result
 
-    def suggest(self, keyword, jap=False, alph=False, num=False):
+    def search_duckduckgo():
+        None
+
+    def suggest(self, keyword, jap=False, alph=False, num=False, cmd=False):
         ''' サジェスト取得 '''
         # 文字リスト作成
         chars = ['', ' ']

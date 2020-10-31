@@ -16,7 +16,7 @@ from .common import Color, get_unique_list
 
 
 # bingでの検索
-def search(args):
+def search(args, cmd=False):
     # engine
     bing = SearchEngine()
     bing.set('bing')
@@ -46,7 +46,8 @@ def search(args):
     # Bingでの検索を実行
     result = bing.search(args.query, type=search_type,
                          maximum=args.num, debug=args.debug,
-                         start=args.start, end=args.end)
+                         start=args.start, end=args.end,
+                         cmd=cmd)
 
     # 仕様上、重複が発生するため除外
     result = get_unique_list(result)
@@ -79,7 +80,7 @@ def search(args):
 
 
 # bingでのsuggest取得
-def suggest(args):
+def suggest(args, cmd=False):
     # enginecommon
     bing = SearchEngine()
     bing.set('bing')
@@ -98,7 +99,8 @@ def suggest(args):
         args.query,
         jap=args.jap,
         alph=args.alph,
-        num=args.num
+        num=args.num,
+        cmd=cmd
     )
     for words in result.values():
         for w in words:
