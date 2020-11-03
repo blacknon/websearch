@@ -471,8 +471,11 @@ class SearchEngine:
             except Exception:
                 break
 
+            # urlを空にする
+            url = ""
+
             for r_data in r_dict:
-                if "u" in r_data:
+                if "u" in r_data and "s" in r_data:
                     d = {
                         "link": r_data["u"],
                         "title": BeautifulSoup(
@@ -485,9 +488,6 @@ class SearchEngine:
                         uri=parse.urlparse(self.SEARCH_URL)
                     )
                     url = base_uri + r_data["n"]
-
-                else:
-                    url = ""
 
             if url == "":
                 break
