@@ -283,9 +283,11 @@ class SearchEngine:
                     if cmd is True:
                         print('-> No more links', self.ENGINE, file=sys.stderr)
                     break
+
                 elif len(links) > maximum - total:
                     result += links[:maximum - total]
                     break
+
                 else:
                     result += links
                     total += len(links)
