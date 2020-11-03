@@ -435,7 +435,7 @@ class SearchEngine:
         n = 0
         for link in elinks:
             # `translate.google.co.jp`のURLを削除していく(Google翻訳のページ)
-            if not re.match(r"^https://translate.google.co.jp", link):
+            if not re.match(r"^https://translate.google.co.jp", link) and not re.match(r"^http://cache.yahoofs.jp", link):
                 if len(etitles) > n:
                     d = {"link": link, "title": etitles[n]}
                 else:
