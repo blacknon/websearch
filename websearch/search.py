@@ -6,6 +6,10 @@
 # that can be found in the LICENSE file.
 # =======================================================
 
+# TODO(blacknon): 言語をoptionで指定できるようにする(ドメインやUAになるか？)
+# TODO(blacknon): スクレイピングではなく、APIを介しての検索をオプションで指定できるようにする
+# TODO(blacknon): sns_search(twitterやfacebook、2chやRedditなど？)を行えるようにする(別パッケージにしたほうが良いかも？)
+
 import asyncio
 import requests
 import json
