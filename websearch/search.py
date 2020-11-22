@@ -8,7 +8,6 @@
 
 # TODO(blacknon): 言語をoptionで指定できるようにする(ドメインやUAになるか？)
 # TODO(blacknon): スクレイピングではなく、APIを介しての検索をオプションで指定できるようにする
-# TODO(blacknon): sns_search(twitterやfacebook、2chやRedditなど？)を行えるようにする(別パッケージにしたほうが良いかも？)
 
 import asyncio
 import requests
@@ -127,7 +126,8 @@ class SearchEngine:
                 'num': '100',   # 1ページごとの表示件数
                 'filter': '0',  # 類似ページのフィルタリング(0...無効, 1...有効)
                 'start': '',    # 開始位置
-                'tbs': ''       # 期間
+                'tbs': '',      # 期間
+                'nfpr': '1'     # もしかして検索(Escape hatch)を無効化
             }
             self.IMAGE_PARAM = {
                 'q': '',        # 検索キーワード
@@ -160,7 +160,9 @@ class SearchEngine:
                 'num': '100',    # 指定不可(削除)
                 'day_from': '',  # 開始日時(yyyy/mm/dd)
                 'day_to': '',    # 終了日時(yyyy/mm/dd)
-                'b': ''          # 開始位置
+                'b': '',         # 開始位置
+                'nfpr': '1',     # もしかして検索(Escape hatch)の無効化
+                'qrw': '0'       # もしかして検索(Escape hatch)の無効化
             }
             self.IMAGE_PARAM = {
                 'q': '',        # 検索キーワード
@@ -289,6 +291,11 @@ class SearchEngine:
                     break
 
                 elif len(links) > maximum - total:
+                    result += links[:maximum - total]
+                    break
+
+                elif len(links) < 20 and self.ENGINE == "Bing":
+                    # Bingの場合、件数以下でも次のページが表示されてしまうため件数でbreak
                     result += links[:maximum - total]
                     break
 
