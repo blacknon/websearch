@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 # =======================================================
-# Copyright(c) 2019 Blacknon. All rights reserved.
+# Copyright(c) 2020 Blacknon. All rights reserved.
 # Use of this source code is governed by an MIT license
 # that can be found in the LICENSE file.
 # =======================================================
@@ -104,11 +104,11 @@ class SearchEngine:
         #   ※ DuckDuckGoの場合、検索結果の取得方法が特殊なため作りが少々異なる
         if engine == 'duckduckgo':
             self.ENGINE = 'DuckDuckGo'
-            self.SEARCH_URL = 'https://duckduckgo.com/d.js'
+            self.PRE_URL = 'https://duckduckgo.com/'
+            self.SEARCH_URL = 'https://links.duckduckgo.com/d.js'
             self.SUGGEST_URL = 'https://duckduckgo.com/ac/'
             self.TEXT_PARAM = {
                 'q': '',  # 検索キーワード
-                'l': 'ja_jp',  # language
                 's': 0  # 取得開始件数
             }
             self.SUGGEST_PARAM = {
@@ -119,8 +119,8 @@ class SearchEngine:
         # Google
         if engine == 'google':
             self.ENGINE = 'Google'
-            self.SEARCH_URL = 'https://www.google.co.jp/search'
-            self.SUGGEST_URL = 'http://www.google.co.jp/complete/search'
+            self.SEARCH_URL = 'https://www.google.com/search'
+            self.SUGGEST_URL = 'http://www.google.com/complete/search'
             self.TEXT_PARAM = {
                 'q': '',        # 検索キーワード
                 'num': '100',   # 1ページごとの表示件数
@@ -181,6 +181,26 @@ class SearchEngine:
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
             return
 
+    def set_lang(self, lang, locale):
+        ''' 国・言語を検索エンジンごとのパラメータに適用する '''
+        if self.ENGINE == 'Baidu':
+            None
+
+        if self.ENGINE == 'Bing':
+            self.TEXT_PARAM['mkt'] = lang + '-' + locale
+
+        if self.ENGINE == 'DuckDuckGo':
+            self.TEXT_PARAM['l'] = lang + '_' + locale
+
+        if self.ENGINE == 'Google':
+            self.TEXT_PARAM['hl'] = lang
+            self.TEXT_PARAM['gl'] = locale
+            None
+
+        if self.ENGINE == 'Yahoo':
+            self.TEXT_PARAM['hl'] = lang
+            self.TEXT_PARAM['gl'] = locale
+
     def set_range(self, start, end):
         ''' 開始・終了期間を検索エンジンごとのパラメータに適用する '''
 
@@ -205,6 +225,11 @@ class SearchEngine:
             return
 
         # DuckDuckGo
+        if self.ENGINE == 'DuckDuckGo':
+            # TODO(blacknon):
+            #     2020-11-22 現在、日付を指定しての検索クエリ機能がなさそうだ。
+            #     追加されたら実装する。
+            None
 
         # Google
         if self.ENGINE == 'Google':
@@ -246,7 +271,6 @@ class SearchEngine:
             print(self.ENGINE, type.capitalize(),
                   'Search:', keyword, file=sys.stderr)
         result, total = [], 0
-        query = self.query_gen(keyword, type)
 
         # maximumが0の場合、返す値は0個になるのでこのままreturn
         if maximum == 0:
@@ -258,10 +282,27 @@ class SearchEngine:
 
         # DuckDuckGoの場合、通常の検索結果取得とは異なるため分岐
         if self.ENGINE == 'DuckDuckGo':
-            result = self.__search_duckduckgo(query, maximum, debug=debug)
+            # 前処理URLを生成してTokenを取得する
+            self.TEXT_PARAM['q'] = keyword
+            params = parse.urlencode(self.TEXT_PARAM)
+            res = self.session.get(self.PRE_URL + '?' + params)
+            r = re.findall(
+                r"(?<=vqd\=)[0-9-]+", res.text
+            )
+
+            # get vqd
+            vqd = r[0]
+            self.TEXT_PARAM['vqd'] = vqd
+
+            try:
+                query = self.query_gen(keyword, type)
+                result = self.__search_duckduckgo(query, maximum, debug=debug)
+            except Exception:
+                return
 
         # Baidu, Bing, Google, Yahooの場合
         else:
+            query = self.query_gen(keyword, type)
             while True:
                 q = next(query)
 
@@ -459,7 +500,8 @@ class SearchEngine:
     def __search_duckduckgo(self, query, maximum, debug=False):
         '''
           DuckDuckGoの検索用関数
-            - DuckDuckGoはJavascriptで検索結果を取得しててちょっとめんどくさいため別関数を用意。
+            - DuckDuckGoはJavascriptで検索結果を取得し、さらに前処理でTokenが必要になるためちょっとめんどくさい。
+            - なので別関数を用意。
             - 初回のqueryはSearchEngine.query_genで生成する
         '''
         url = next(query)
