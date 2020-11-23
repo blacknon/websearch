@@ -176,8 +176,9 @@ class SearchEngine:
                 'appid': 'dj0zaiZpPVU5MGlSOUZ4cHVLbCZzPWNvbnN1bWVyc2VjcmV0Jng9ZGQ-',
                 'output': 'json',
             }
-            self.SOUP_SELECT_URL = '.Contents__innerGroupBody > .sw-CardBase > .Algo > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > a'
-            self.SOUP_SELECT_TITLE = '.Contents__innerGroupBody > .sw-CardBase > .Algo > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > a > h3'
+            self.SOUP_SELECT_URL = '.Contents__innerGroupBody > .sw-CardBase > .Algo > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > a'  # NOT WORKING
+            self.SOUP_SELECT_TITLE = '.Contents__innerGroupBody > .sw-CardBase > .Algo > section > .sw-Card__section > .sw-Card__headerSpace > .sw-Card__title > a > h3'  # NOT WORKING
+            self.SOUP_SELECT_JSON = '#__NEXT_DATA__'
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
             return
 
@@ -461,14 +462,28 @@ class SearchEngine:
     def get_links(self, html, type):
         ''' html内のリンクを取得 '''
         soup = BeautifulSoup(html, 'lxml')
-        if type == 'text':
-            # linkのurlを取得する
-            elements = soup.select(self.SOUP_SELECT_URL)
-            elinks = [e['href'] for e in elements]
 
-            # linkのtitleを取得する
-            elements = soup.select(self.SOUP_SELECT_TITLE)
-            etitles = [e.text for e in elements]
+        if type == 'text':
+            if self.ENGINE == 'Yahoo':
+                # Yahooの場合、jsonを取得するようになったため分岐
+                elements = soup.select(self.SOUP_SELECT_JSON)
+                element = elements[0].string
+
+                # jsonからデータを抽出            　
+                j = json.loads(element)
+                jd = j['props']['initialProps']['pageProps']['pageData']['algos']
+
+                elinks = [e['url'] for e in jd]
+                etitles = [e['title'] for e in jd]
+
+            else:
+                # linkのurlを取得する
+                elements = soup.select(self.SOUP_SELECT_URL)
+                elinks = [e['href'] for e in elements]
+
+                # linkのtitleを取得する
+                elements = soup.select(self.SOUP_SELECT_TITLE)
+                etitles = [e.text for e in elements]
 
         elif type == 'image':
             elements = soup.select(self.SOUP_SELECT_IMAGE)
