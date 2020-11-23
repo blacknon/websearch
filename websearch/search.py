@@ -6,8 +6,8 @@
 # that can be found in the LICENSE file.
 # =======================================================
 
-# TODO(blacknon): 言語をoptionで指定できるようにする(ドメインやUAになるか？)
 # TODO(blacknon): スクレイピングではなく、APIを介しての検索をオプションで指定できるようにする
+# TODO(blacknon): BANされた時にわかるようにする(errを返すようにしたい)
 
 import asyncio
 import requests
