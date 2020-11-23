@@ -161,6 +161,20 @@ def main():
         ],
         nargs='+', type=str, help='検索エンジンを指定')
     parser_search.add_argument(
+        '-l', '--lang', default=['ja'],
+        choices=[
+            'ja',
+            'en'
+        ],
+        type=str, help='言語を指定')
+    parser_search.add_argument(
+        '-c', '--country', default=['JP'],
+        choices=[
+            'JP',
+            'US'
+        ],
+        type=str, help='言語を指定')
+    parser_search.add_argument(
         '-T', '--title', action='store_true',
         help='検索結果のタイトルも出力する'
     )

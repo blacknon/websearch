@@ -18,6 +18,9 @@ def search(args, cmd=False):
     yahoo = SearchEngine()
     yahoo.set('yahoo')
 
+    # lang/country code
+    yahoo.set_lang(args.lang, args.country)
+
     # Proxy
     if args.proxy != '' and args.splash == '':
         yahoo.set_proxy(args.proxy)

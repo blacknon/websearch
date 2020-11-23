@@ -20,6 +20,9 @@ def search(args, cmd=False):
     baidu = SearchEngine()
     baidu.set('baidu')
 
+    # lang/country code
+    baidu.set_lang(args.lang, args.country)
+
     # proxy
     if args.proxy != '' and args.splash == '':
         baidu.set_proxy(args.proxy)

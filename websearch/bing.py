@@ -21,6 +21,9 @@ def search(args, cmd=False):
     bing = SearchEngine()
     bing.set('bing')
 
+    # lang/country code
+    bing.set_lang(args.lang, args.country)
+
     # Proxy
     if args.proxy != '' and args.splash == '':
         bing.set_proxy(args.proxy)

@@ -18,6 +18,9 @@ def search(args, cmd=False):
     google = SearchEngine()
     google.set('google')
 
+    # lang/country code
+    google.set_lang(args.lang, args.country)
+
     # Proxy
     if args.proxy != '' and args.splash == '':
         google.set_proxy(args.proxy)
