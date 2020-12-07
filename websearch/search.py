@@ -182,6 +182,11 @@ class SearchEngine:
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
             return
 
+        # Yandex
+        # TODO(blacknon): Yandexの追加
+        if engine == 'yandex':
+            self.ENGINE = 'Yandex'
+
     def set_lang(self, lang, locale):
         ''' 国・言語を検索エンジンごとのパラメータに適用する '''
         if self.ENGINE == 'Baidu':
@@ -266,7 +271,7 @@ class SearchEngine:
         }
         self.session.proxies = proxies
 
-    def search(self, keyword, type='text', maximum=100, parallel=False, debug=False, start='', end='', cmd=False):
+    def search(self, keyword, type='text', maximum=100, parallel=False, debug=False, start=None, end=None, cmd=False):
         ''' 検索 '''
         if cmd is True:
             print(self.ENGINE, type.capitalize(),
