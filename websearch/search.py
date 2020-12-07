@@ -8,6 +8,8 @@
 
 # TODO(blacknon): スクレイピングではなく、APIを介しての検索をオプションで指定できるようにする
 # TODO(blacknon): BANされた時にわかるようにする(errを返すようにしたい)
+# TODO(blacknon): ブラウザのCookieを共有する方法について考える(re-captcha対策)
+#                 => BANされた際にブラウザからre-captchaをさせられないかという検討
 
 import asyncio
 import requests
@@ -184,8 +186,8 @@ class SearchEngine:
 
         # Yandex
         # TODO(blacknon): Yandexの追加
-        if engine == 'yandex':
-            self.ENGINE = 'Yandex'
+        # if engine == 'yandex':
+        #     self.ENGINE = 'Yandex'
 
     def set_lang(self, lang, locale):
         ''' 国・言語を検索エンジンごとのパラメータに適用する '''
@@ -333,6 +335,9 @@ class SearchEngine:
 
                 # 検索結果の追加
                 if not len(links):
+                    # TODO(blacknon): recaptchaチェックを追加
+                    #                 (もしrecaptchaになっていた場合、回避して続きをやるかどうするかの処理についても検討する)
+
                     if cmd is True:
                         print('-> No more links', self.ENGINE, file=sys.stderr)
                     break
