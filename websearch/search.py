@@ -9,7 +9,8 @@
 # TODO(blacknon): スクレイピングではなく、APIを介しての検索をオプションで指定できるようにする
 # TODO(blacknon): BANされた時にわかるようにする(errを返すようにしたい)
 # TODO(blacknon): ブラウザのCookieを共有する方法について考える(re-captcha対策)
-#                 => BANされた際にブラウザからre-captchaをさせられないかという検討
+#                 => ブラウザからre-captchaをさせられないかという検討。
+#                 => おそらく雑に共有はできなそう。import/exportを組み合わせる方法で対応するのが良いか。
 
 import asyncio
 import requests
@@ -265,6 +266,7 @@ class SearchEngine:
 
             return
 
+    # proxyをセットする
     def set_proxy(self, proxy):
         ''' 検索時のProxyを定義 '''
         proxies = {
@@ -272,6 +274,10 @@ class SearchEngine:
             'https': proxy
         }
         self.session.proxies = proxies
+
+    # cookie.txtを読み込んでセットする
+    # def set_cookie(self, cookie):
+        # None
 
     def search(self, keyword, type='text', maximum=100, parallel=False, debug=False, start=None, end=None, cmd=False):
         ''' 検索 '''
