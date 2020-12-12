@@ -8,6 +8,9 @@
 
 # TODO(blacknon): スクレイピングではなく、APIを介しての検索をオプションで指定できるようにする
 # TODO(blacknon): BANされた時にわかるようにする(errを返すようにしたい)
+# TODO(blacknon): ブラウザのCookieを共有する方法について考える(re-captcha対策)
+#                 => ブラウザからre-captchaをさせられないかという検討。
+#                 => おそらく雑に共有はできなそう。import/exportを組み合わせる方法で対応するのが良いか。
 
 import asyncio
 import requests
@@ -182,6 +185,11 @@ class SearchEngine:
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
             return
 
+        # Yandex
+        # TODO(blacknon): Yandexの追加
+        # if engine == 'yandex':
+        #     self.ENGINE = 'Yandex'
+
     def set_lang(self, lang, locale):
         ''' 国・言語を検索エンジンごとのパラメータに適用する '''
         if self.ENGINE == 'Baidu':
@@ -258,6 +266,7 @@ class SearchEngine:
 
             return
 
+    # proxyをセットする
     def set_proxy(self, proxy):
         ''' 検索時のProxyを定義 '''
         proxies = {
@@ -266,7 +275,11 @@ class SearchEngine:
         }
         self.session.proxies = proxies
 
-    def search(self, keyword, type='text', maximum=100, parallel=False, debug=False, start='', end='', cmd=False):
+    # cookie.txtを読み込んでセットする
+    # def set_cookie(self, cookie):
+        # None
+
+    def search(self, keyword, type='text', maximum=100, parallel=False, debug=False, start=None, end=None, cmd=False):
         ''' 検索 '''
         if cmd is True:
             print(self.ENGINE, type.capitalize(),
@@ -328,6 +341,9 @@ class SearchEngine:
 
                 # 検索結果の追加
                 if not len(links):
+                    # TODO(blacknon): recaptchaチェックを追加
+                    #                 (もしrecaptchaになっていた場合、回避して続きをやるかどうするかの処理についても検討する)
+
                     if cmd is True:
                         print('-> No more links', self.ENGINE, file=sys.stderr)
                     break
