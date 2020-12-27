@@ -12,6 +12,10 @@
 #                 => ブラウザからre-captchaをさせられないかという検討。
 #                 => おそらく雑に共有はできなそう。import/exportを組み合わせる方法で対応するのが良いか。
 
+# TODO(blacknon): Googleの出力がsplash経由時と生リクエストでhtmlが異なるご様子。パターン別で対応させるように書き換える。
+# TODO(blacknon): Yahooの出力がまた変わった様子。いい加減にしろよマジで。
+
+
 import asyncio
 import requests
 import json
