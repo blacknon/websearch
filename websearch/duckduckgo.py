@@ -17,11 +17,6 @@ from .common import Color
 def search(args, cmd=False):
     # duckduckgo class
     duckduckgo = SearchEngine()
-    duckduckgo.set('duckduckgo')
-
-    # Proxy
-    if args.proxy != '' and args.splash == '':
-        duckduckgo.set_proxy(args.proxy)
 
     # Splush
     if args.splash != '':
@@ -32,6 +27,13 @@ def search(args, cmd=False):
             duckduckgo.SPLASH_URL = duckduckgo.SPLASH_URL + 'proxy=' + args.proxy + '&'
 
         duckduckgo.SPLASH_URL = duckduckgo.SPLASH_URL + 'url='
+
+    # Set Engine
+    duckduckgo.set('duckduckgo')
+
+    # Proxy
+    if args.proxy != '' and args.splash == '':
+        duckduckgo.set_proxy(args.proxy)
 
     # Header
     header = '[DuckDuckGoSearch]: '

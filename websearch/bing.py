@@ -16,10 +16,6 @@ from .common import Color, get_unique_list
 def search(args, cmd=False):
     # engine
     bing = SearchEngine()
-    bing.set('bing')
-
-    # lang/country code
-    bing.set_lang(args.lang, args.country)
 
     # Proxy
     if args.proxy != '' and args.splash == '':
@@ -35,6 +31,12 @@ def search(args, cmd=False):
 
         bing.SPLASH_URL = bing.SPLASH_URL + 'url='
 
+    # Set Engine
+    bing.set('bing')
+
+    # lang/country code
+    bing.set_lang(args.lang, args.country)
+
     # Header
     header = '[BingSearch]: '
     if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty()):
@@ -43,7 +45,7 @@ def search(args, cmd=False):
     # 検索タイプを設定(テキスト or 画像)
     search_type = 'text'
 
-    # Bingでの検索を実行
+    # Bingでの検索を実
     result = bing.search(args.query, type=search_type,
                          maximum=args.num, debug=args.debug,
                          start=args.start, end=args.end,

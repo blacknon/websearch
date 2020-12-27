@@ -16,10 +16,6 @@ from .common import Color
 def search(args, cmd=False):
     # google class
     google = SearchEngine()
-    google.set('google')
-
-    # lang/country code
-    google.set_lang(args.lang, args.country)
 
     # Proxy
     if args.proxy != '' and args.splash == '':
@@ -34,6 +30,12 @@ def search(args, cmd=False):
             google.SPLASH_URL = google.SPLASH_URL + 'proxy=' + args.proxy + '&'
 
         google.SPLASH_URL = google.SPLASH_URL + 'url='
+
+    # Set Engine
+    google.set('google')
+
+    # lang/country code
+    google.set_lang(args.lang, args.country)
 
     # Header
     header = '[GoogleSearch]: '

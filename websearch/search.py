@@ -153,7 +153,6 @@ class SearchEngine:
             self.SOUP_SELECT_URL = '.rc > .yuRUbf > a'
             self.SOUP_SELECT_TITLE = '.rc > .yuRUbf > a > .LC20lb'
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
-            return
 
         # Yahoo
         # NOTE:
@@ -490,9 +489,9 @@ class SearchEngine:
                 elements = soup.select(self.SOUP_SELECT_JSON)
                 element = elements[0].string
 
-                # jsonからデータを抽出            　
+                # jsonからデータを抽出　
                 j = json.loads(element)
-                jd = j['props']['initialProps']['pageProps']['pageData']['algos']
+                jd = j['props']['pageProps']['initialProps']['pageData']['algos']
 
                 elinks = [e['url'] for e in jd]
                 etitles = [e['title'] for e in jd]

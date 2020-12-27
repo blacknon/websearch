@@ -18,10 +18,6 @@ def search(args, cmd=False):
 
     # baidu class
     baidu = SearchEngine()
-    baidu.set('baidu')
-
-    # lang/country code
-    baidu.set_lang(args.lang, args.country)
 
     # proxy
     if args.proxy != '' and args.splash == '':
@@ -36,6 +32,12 @@ def search(args, cmd=False):
             baidu.SPLASH_URL = baidu.SPLASH_URL + 'proxy=' + args.proxy + '&'
 
         baidu.SPLASH_URL = baidu.SPLASH_URL + 'url='
+
+    # Set Engine
+    baidu.set('baidu')
+
+    # lang/country code
+    baidu.set_lang(args.lang, args.country)
 
     # Header
     header = '[BaiduSearch]: '

@@ -16,10 +16,6 @@ from .common import Color
 def search(args, cmd=False):
     # yahoo class
     yahoo = SearchEngine()
-    yahoo.set('yahoo')
-
-    # lang/country code
-    yahoo.set_lang(args.lang, args.country)
 
     # Proxy
     if args.proxy != '' and args.splash == '':
@@ -34,6 +30,12 @@ def search(args, cmd=False):
             yahoo.SPLASH_URL = yahoo.SPLASH_URL + 'proxy=' + args.proxy + '&'
 
         yahoo.SPLASH_URL = yahoo.SPLASH_URL + 'url='
+
+    # Set Engine
+    yahoo.set('yahoo')
+
+    # lang/country code
+    yahoo.set_lang(args.lang, args.country)
 
     # Header
     header = '[YahooSearch]: '
