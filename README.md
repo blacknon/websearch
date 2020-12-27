@@ -1,7 +1,7 @@
 websearch
 ===
 
-Baidu, Bing, Google, Yahooの検索結果をスクレイピングして検索結果のURLを一覧にして出力するコマンド。サジェストも対応。\
+Baidu, Bing, DuckDuckGo, Google, Yahooの検索結果をスクレイピングして検索結果のURLを一覧にして出力するコマンド。サジェストも対応。\
 Baiduは日本語の結果は大体返ってこないので、基本中国語とか.cnドメインへの対応用。
 
 
