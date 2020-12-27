@@ -279,6 +279,7 @@ class SearchEngine:
     # def set_cookie(self, cookie):
         # None
 
+    # 検索を実行する
     def search(self, keyword, type='text', maximum=100, parallel=False, debug=False, start=None, end=None, cmd=False):
         ''' 検索 '''
         if cmd is True:
