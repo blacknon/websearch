@@ -14,8 +14,6 @@ from .common import Color
 
 # baiduでの検索
 def search(args, cmd=False):
-    print(cmd)
-
     # baidu class
     baidu = SearchEngine()
 
