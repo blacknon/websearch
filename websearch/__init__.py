@@ -20,7 +20,8 @@ __version__ = get_distribution('websearch').version
 # searchサブコマンドでの動作
 def command_search(args):
     # args.startもしくはargs.endだけ指定されている場合
-    if (args.start is None and args.end is not None) or (args.start is not None and args.end is None):
+    if ((args.start is None and args.end is not None)
+            or (args.start is not None and args.end is None)):
         print("期間を指定する場合は--start, --endの両方を指定してください")
         return
 

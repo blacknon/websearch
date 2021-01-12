@@ -11,6 +11,7 @@
 # TODO(blacknon): ブラウザのCookieを共有する方法について考える(re-captcha対策)
 #                 => ブラウザからre-captchaをさせられないかという検討。
 #                 => おそらく雑に共有はできなそう。import/exportを組み合わせる方法で対応するのが良いか。
+# TODO(blacknon): bingの出力が変わってるかも？debugして確認する
 
 
 import asyncio
