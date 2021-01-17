@@ -76,7 +76,8 @@ if __name__ == "__main__":
             'argparse',
             'bs4',
             'fake_useragent',
-            'lxml'
+            'lxml',
+            'requests'
         ],
         url='https://github.com/blacknon/websearch',
         packages=setuptools.find_packages(),

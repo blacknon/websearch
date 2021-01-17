@@ -306,11 +306,10 @@ class SearchEngine:
                 r"(?<=vqd\=)[0-9-]+", res.text
             )
 
-            # get vqd
-            vqd = r[0]
-            self.TEXT_PARAM['vqd'] = vqd
-
             try:
+                # get vqd
+                vqd = r[0]
+                self.TEXT_PARAM['vqd'] = vqd
                 query = self.query_gen(keyword, type)
                 result = self.__search_duckduckgo(query, maximum, debug=debug)
             except Exception:
