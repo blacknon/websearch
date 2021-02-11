@@ -148,8 +148,8 @@ class SearchEngine:
                 'oe': 'utf-8',
                 'client': 'firefox'
             }
-            self.SOUP_SELECT_URL = '.rc > .yuRUbf > a'
-            self.SOUP_SELECT_TITLE = '.rc > .yuRUbf > a > .LC20lb'
+            self.SOUP_SELECT_URL = '.tF2Cxc > .yuRUbf > a'
+            self.SOUP_SELECT_TITLE = '.tF2Cxc > .yuRUbf > a > .LC20lb'
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
 
         # Yahoo
@@ -483,7 +483,7 @@ class SearchEngine:
         if type == 'text':
             if self.ENGINE == 'Yahoo':
                 # Yahooの場合、jsonを取得するようになったため分岐
-                elements = soup.select(self.SOUP_SELECT_JSON)
+                elements = d
                 element = elements[0].string
 
                 # jsonからデータを抽出　
