@@ -513,6 +513,7 @@ class SearchEngine:
             asyncio.set_event_loop(loop)
             elinks = loop.run_until_complete(
                 resolv_links(loop, self.session, elinks))
+            loop.close()
 
         # dictをlistに入れていく
         links = list()
@@ -601,10 +602,21 @@ def resolv_url(session, url):
     return url
 
 
+# TODO(blacknon): Python3.9だと動作しない模様。3.8だと動作するので、詳細を調べて対応する。
 async def resolv_links(loop, session, links):
     ''' リダイレクト先のurlをパラレルで取得する(Baiduで使用) '''
     async def req(session, url):
-        return await loop.run_in_executor(None, resolv_url, session, url)
+        task = await loop.run_in_executor(None, resolv_url, session, url)
+        return task
 
-    tasks = [req(session, link) for link in links]
-    return await asyncio.gather(*tasks)
+    tasks = []
+    for link in links:
+        task = req(session, link)
+        tasks.append(task)
+
+    # tasks = [req(session, link) for link in links]
+    data = await asyncio.gather(*tasks)
+
+    await asyncio.sleep(1)
+
+    return data
