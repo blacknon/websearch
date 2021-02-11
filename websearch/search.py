@@ -100,8 +100,8 @@ class SearchEngine:
                 'qry': '',  # 検索キーワード
                 'cvid': 'F5F47E4155E44D86A86690B49023B0EF'
             }
-            self.SOUP_SELECT_URL = 'li > h2 > a'
-            self.SOUP_SELECT_TITLE = 'li > h2 > a'
+            self.SOUP_SELECT_URL = 'h2 > a'
+            self.SOUP_SELECT_TITLE = 'h2 > a'
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
             return
 
