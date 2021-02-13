@@ -10,7 +10,7 @@ import argparse
 from datetime import datetime
 import threading
 
-from . import baidu, bing, duckduckgo, google, yahoo
+from . import search, suggest
 from pkg_resources import get_distribution
 
 # version (setup.pyから取得してくる)
@@ -25,127 +25,61 @@ def command_search(args):
         print("期間を指定する場合は--start, --endの両方を指定してください")
         return
 
+    tasks = []
     for st in args.search_type:
         # if all
         if st == 'all':
-            thread_baidu = threading.Thread(
-                target=baidu.search, args=([args, True]))
-            thread_bing = threading.Thread(
-                target=bing.search, args=([args, True]))
-            thread_duckduckgo = threading.Thread(
-                target=duckduckgo.search, args=([args, True]))
-            thread_google = threading.Thread(
-                target=google.search, args=([args, True]))
-            thread_yahoo = threading.Thread(
-                target=yahoo.search, args=([args, True]))
+            engines = ['baidu', 'bing', 'duckduckgo', 'google', 'yahoo']
 
-            thread_baidu.start()
-            thread_bing.start()
-            thread_duckduckgo.start()
-            thread_google.start()
-            thread_yahoo.start()
-            thread_baidu.join()
-            thread_bing.join()
-            thread_duckduckgo.join()
-            thread_google.join()
-            thread_yahoo.join()
+            for engine in engines:
+                task = threading.Thread(
+                    target=search.run, args=(engine, args, True))
+                tasks.append(task)
+
             continue
 
-        # if baidu
-        if st == 'baidu':
-            thread_baidu = threading.Thread(
-                target=baidu.search, args=([args, True]))
-            thread_baidu.start()
-            thread_baidu.join()
+        # if in searchengine
+        if st in {'baidu', 'bing', 'duckduckgo', 'google', 'yahoo'}:
+            task = threading.Thread(target=search.run, args=(st, args, True))
+            tasks.append(task)
+
             continue
 
-        # if bing
-        if st == 'bing':
-            thread_bing = threading.Thread(
-                target=bing.search, args=([args, True]))
-            thread_bing.start()
-            thread_bing.join()
-            continue
+    for task in tasks:
+        task.start()
 
-        # if duckduckgo
-        if st == 'duckduckgo':
-            thread_duckduckgo = threading.Thread(
-                target=duckduckgo.search, args=([args, True]))
-            thread_duckduckgo.start()
-            thread_duckduckgo.join()
-            continue
-
-        # if google
-        if st == 'google':
-            thread_google = threading.Thread(
-                target=google.search, args=([args, True]))
-            thread_google.start()
-            thread_google.join()
-            continue
-
-        # if yahoo
-        if st == 'yahoo':
-            thread_yahoo = threading.Thread(
-                target=yahoo.search, args=([args, True]))
-            thread_yahoo.start()
-            thread_yahoo.join()
-            continue
+    for task in tasks:
+        task.join()
 
 
 # suggestサブコマンドでの動作
 def command_suggest(args):
+    tasks = []
     for st in args.search_type:
         # if all
         if st == 'all':
-            thread_baidu = threading.Thread(
-                target=baidu.suggest, args=([args, True]))
-            thread_bing = threading.Thread(
-                target=bing.suggest, args=([args, True]))
-            thread_google = threading.Thread(
-                target=google.suggest, args=([args, True]))
-            thread_yahoo = threading.Thread(
-                target=yahoo.suggest, args=([args, True]))
+            engines = ['baidu', 'bing', 'duckduckgo', 'google', 'yahoo']
 
-            thread_baidu.start()
-            thread_bing.start()
-            thread_google.start()
-            thread_yahoo.start()
+            for engine in engines:
+                task = threading.Thread(
+                    suggest.run, args=(engine, args, True))
+                tasks.append(task)
+
             continue
 
-        # if baidu
-        if st == 'baidu':
-            thread_baidu = threading.Thread(
-                target=baidu.suggest, args=([args, True]))
-            thread_baidu.start()
+        # if in searchengine
+        if st in {'baidu', 'bing', 'duckduckgo', 'google', 'yahoo'}:
+            task = threading.Thread(
+                suggest.run, args=(st, args, True))
+            tasks.append(task)
+
             continue
 
-        # if bing
-        if st == 'bing':
-            thread_bing = threading.Thread(
-                target=bing.suggest, args=([args, True]))
-            thread_bing.start()
-            continue
+    for task in tasks:
+        task.start()
 
-        # if duckduckgo
-        if st == 'duckduckgo':
-            thread_duckduckgo = threading.Thread(
-                target=duckduckgo.suggest, args=([args, True]))
-            thread_duckduckgo.start()
-            continue
-
-        # if google
-        if st == 'google':
-            thread_google = threading.Thread(
-                target=google.suggest, args=([args, True]))
-            thread_google.start()
-            continue
-
-        # if yahoo
-        if st == 'yahoo':
-            thread_yahoo = threading.Thread(
-                target=yahoo.suggest, args=([args, True]))
-            thread_yahoo.start()
-            continue
+    for task in tasks:
+        task.join()
 
 
 # main
