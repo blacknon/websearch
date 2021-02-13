@@ -44,6 +44,11 @@ def command_search(args):
             thread_duckduckgo.start()
             thread_google.start()
             thread_yahoo.start()
+            thread_baidu.join()
+            thread_bing.join()
+            thread_duckduckgo.join()
+            thread_google.join()
+            thread_yahoo.join()
             continue
 
         # if baidu
@@ -51,6 +56,7 @@ def command_search(args):
             thread_baidu = threading.Thread(
                 target=baidu.search, args=([args, True]))
             thread_baidu.start()
+            thread_baidu.join()
             continue
 
         # if bing
@@ -58,6 +64,7 @@ def command_search(args):
             thread_bing = threading.Thread(
                 target=bing.search, args=([args, True]))
             thread_bing.start()
+            thread_bing.join()
             continue
 
         # if duckduckgo
@@ -65,6 +72,7 @@ def command_search(args):
             thread_duckduckgo = threading.Thread(
                 target=duckduckgo.search, args=([args, True]))
             thread_duckduckgo.start()
+            thread_duckduckgo.join()
             continue
 
         # if google
@@ -72,6 +80,7 @@ def command_search(args):
             thread_google = threading.Thread(
                 target=google.search, args=([args, True]))
             thread_google.start()
+            thread_google.join()
             continue
 
         # if yahoo
@@ -79,6 +88,7 @@ def command_search(args):
             thread_yahoo = threading.Thread(
                 target=yahoo.search, args=([args, True]))
             thread_yahoo.start()
+            thread_yahoo.join()
             continue
 
 
