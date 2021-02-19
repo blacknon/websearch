@@ -6,6 +6,13 @@
 # that can be found in the LICENSE file.
 # =======================================================
 
+# TODO: 以下のようなre-captchaへの対応を追加する
+#       - エラーを返すようにする
+#       - 操作を途中で停止してCookieを受け付ける処理を挟めるようにすることで、やり直しでのリクエストを受け付けるようにする
+#       - anticaptchaを入れて対策する
+#         - https://github.com/ad-m/python-anticaptcha
+
+
 import sys
 
 from .engine import SearchEngine
