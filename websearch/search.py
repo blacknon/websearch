@@ -9,8 +9,11 @@
 # TODO: 以下のようなre-captchaへの対応を追加する
 #       - エラーを返すようにする
 #       - 操作を途中で停止してCookieを受け付ける処理を挟めるようにすることで、やり直しでのリクエストを受け付けるようにする
-#       - anticaptchaを入れて対策する
+#       - anticaptchaを入れて対策する(Seleniumが必要かも？)
+#       - 参考
 #         - https://github.com/ad-m/python-anticaptcha
+#         - https://github.com/chr0x6eos/ReCaptchaBypass
+#         - https://qiita.com/derodero24/items/7d36f4617a40fbb36b11
 
 
 import sys
