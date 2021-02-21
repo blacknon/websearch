@@ -7,13 +7,16 @@
 # =======================================================
 
 # TODO: 以下のようなre-captchaへの対応を追加する
-#       - エラーを返すようにする
+#       - エラーを返すようにする(識別処理の追加)
 #       - 操作を途中で停止してCookieを受け付ける処理を挟めるようにすることで、やり直しでのリクエストを受け付けるようにする
-#       - anticaptchaを入れて対策する(Seleniumが必要かも？)
+#       - anticaptchaを入れて対策する(Seleniumが必要かも？)。APIの指定をオプション等でできるようにしたほうがいいかも？？
 #       - 参考
 #         - https://github.com/ad-m/python-anticaptcha
 #         - https://github.com/chr0x6eos/ReCaptchaBypass
 #         - https://qiita.com/derodero24/items/7d36f4617a40fbb36b11
+
+# TODO: Seleniumへの対応が必要(オプションの追加)
+#       - Splashとの排他が必要？？(どちらかを優先でも可)
 
 
 import sys
