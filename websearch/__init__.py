@@ -10,7 +10,7 @@ import argparse
 from datetime import datetime
 import threading
 
-from . import search, suggest
+from .subcommands import search, suggest
 from pkg_resources import get_distribution
 
 # version (setup.pyから取得してくる)
@@ -33,14 +33,15 @@ def command_search(args):
 
             for engine in engines:
                 task = threading.Thread(
-                    target=search.run, args=(engine, args, True))
+                    target=search, args=(engine, args, True))
                 tasks.append(task)
 
             continue
 
         # if in searchengine
         if st in {'baidu', 'bing', 'duckduckgo', 'google', 'yahoo'}:
-            task = threading.Thread(target=search.run, args=(st, args, True))
+            task = threading.Thread(
+                target=search, args=(st, args, True))
             tasks.append(task)
 
             continue
@@ -62,7 +63,7 @@ def command_suggest(args):
 
             for engine in engines:
                 task = threading.Thread(
-                    suggest.run, args=(engine, args, True))
+                    suggest, args=(engine, args, True))
                 tasks.append(task)
 
             continue
@@ -70,7 +71,7 @@ def command_suggest(args):
         # if in searchengine
         if st in {'baidu', 'bing', 'duckduckgo', 'google', 'yahoo'}:
             task = threading.Thread(
-                suggest.run, args=(st, args, True))
+                suggest, args=(st, args, True))
             tasks.append(task)
 
             continue

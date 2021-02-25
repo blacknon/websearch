@@ -31,14 +31,15 @@
 
 # TODO(blacknon): bingの出力が変わってるかも？debugして確認する
 
-# TODO(blacknon): GoogleがSplash経由じゃないとデータが取れなくなってるので、対応を考える
-
 
 import asyncio
 import requests
 import json
 import sys
 import re
+import urllib.parse as urlparse
+from urllib.parse import parse_qs
+
 from string import ascii_lowercase, digits
 from datetime import datetime
 from urllib import parse
@@ -173,8 +174,10 @@ class SearchEngine:
                 'oe': 'utf-8',
                 'client': 'firefox'
             }
-            self.SOUP_SELECT_URL = '.tF2Cxc > .yuRUbf > a'
-            self.SOUP_SELECT_TITLE = '.tF2Cxc > .yuRUbf > a > .LC20lb'
+            # self.SOUP_SELECT_URL = '.tF2Cxc > .yuRUbf > a'
+            self.SOUP_SELECT_URL = '.ZINbbc > .kCrYT > a'
+            # self.SOUP_SELECT_TITLE = '.tF2Cxc > .yuRUbf > a > .LC20lb'
+            self.SOUP_SELECT_TITLE = '.ZINbbc > .kCrYT > a > .zBAuLc > .BNeawe'
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
             self.COLOR = Color.PURPLE
             return
@@ -535,6 +538,17 @@ class SearchEngine:
             elements = soup.select(self.SOUP_SELECT_IMAGE)
             jsons = [json.loads(e.get_text()) for e in elements]
             elinks = [js['ou'] for js in jsons]
+
+        # 検索エンジンがGoogleだった場合、`/url`のqパラメータのみを抽出させる
+        if self.ENGINE == 'Google':
+            new_elinks = []
+            for elink in elinks:
+                parsed = urlparse.urlparse(elink)
+                parsed_q = parse_qs(parsed.query)['q']
+                if len(parsed_q) > 0:
+                    new_elink = parsed_q[0]
+                    new_elinks.append(new_elink)
+            elinks = list(dict.fromkeys(new_elinks))
 
         # もし検索エンジンがBaiduだった場合、linkのリダイレクトを追う(asyncを利用した非同期処理)
         if self.ENGINE == 'Baidu':

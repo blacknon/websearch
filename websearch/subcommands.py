@@ -14,7 +14,7 @@ from .common import Color
 
 
 # 検索
-def run(engine, args, cmd=False):
+def search(engine, args, cmd=False):
     # start search engine class
     se = SearchEngine()
 
@@ -78,3 +78,28 @@ def run(engine, args, cmd=False):
             print(header + sep + title + sep + link)
         else:
             print(header + sep + link)
+
+
+# サジェスト
+def suggest(engine, args, cmd=False):
+    # engine
+    se = SearchEngine()
+    se.set(engine)
+
+    # header
+    header = '[' + se.ENGINE + 'Suggest]: '
+    if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty()):
+        header = se.COLOR + header + Color.END
+
+    # Suggestを取得
+    result = se.suggest(
+        args.query,
+        jap=args.jap,
+        alph=args.alph,
+        num=args.num,
+        cmd=cmd
+    )
+
+    for words in result.values():
+        for w in words:
+            print(header + w)
