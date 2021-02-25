@@ -6,12 +6,32 @@
 # that can be found in the LICENSE file.
 # =======================================================
 
+# TODO(blacknon): このままだと見にくいので、検索エンジンや処理ごとに分離する
+
 # TODO(blacknon): スクレイピングではなく、APIを介しての検索をオプションで指定できるようにする
+
+# TODO(blacknon): 画像検索もちゃんと追加する
+
 # TODO(blacknon): BANされた時にわかるようにする(errを返すようにしたい)
+#                 => 更に、その時に手動でRe-captchaへの対応をさせたり、代行サービスのAPIから処理を行わせるような処理を追加したい
+#                    - エラーを返すようにする(識別処理の追加)
+#                    - 操作を途中で停止してCookieを受け付ける処理を挟めるようにすることで、やり直しでのリクエストを受け付けるようにする
+#                    - anticaptchaを入れて対策する(Seleniumが必要かも？)。APIの指定をオプション等でできるようにしたほうがいいかも？？
+#                    - 参考
+#                      - https://github.com/ad-m/python-anticaptcha
+#                      - https://github.com/chr0x6eos/ReCaptchaBypass
+#                      - https://qiita.com/derodero24/items/7d36f4617a40fbb36b11
+
+# TODO: Seleniumへの対応が必要(オプションの追加)
+#       - Splashとの排他が必要？？(どちらかを優先でも可)
+
 # TODO(blacknon): ブラウザのCookieを共有する方法について考える(re-captcha対策)
 #                 => ブラウザからre-captchaをさせられないかという検討。
 #                 => おそらく雑に共有はできなそう。import/exportを組み合わせる方法で対応するのが良いか。
+
 # TODO(blacknon): bingの出力が変わってるかも？debugして確認する
+
+# TODO(blacknon): GoogleがSplash経由じゃないとデータが取れなくなってるので、対応を考える
 
 
 import asyncio
@@ -484,6 +504,7 @@ class SearchEngine:
             yield target_url
             page += 1
 
+    # TODO(blacknon): 一部の処理を分離(検索エンジンごとに処理をさせる)
     def get_links(self, html, type):
         ''' html内のリンクを取得 '''
         soup = BeautifulSoup(html, 'lxml')
