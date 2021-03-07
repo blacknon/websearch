@@ -18,30 +18,30 @@ def search(engine, args, cmd=False):
     # start search engine class
     se = SearchEngine()
 
+    # Set Engine
+    se.set(engine)
+
     # proxy
     if args.proxy != '' and args.splash == '':
         se.set_proxy(args.proxy)
 
     # Splush
     if args.splash != '':
-        se.SPLASH_URL = 'http://' + args.splash + '/render.html?'
+        splash_url = 'http://' + args.splash + '/render.html?'
 
         # Proxyが指定されている場合
         if args.proxy != '':
-            se.SPLASH_URL = se.SPLASH_URL + 'proxy=' + args.proxy + '&'
+            splash_url = splash_url + 'proxy=' + args.proxy + '&'
 
-        se.SPLASH_URL = se.SPLASH_URL + 'url='
-
-    # Set Engine
-    se.set(engine)
+        se.set_splash_url(splash_url + 'url=')
 
     # lang/country code
     se.set_lang(args.lang, args.country)
 
     # Header
-    header = '[' + se.ENGINE + 'Search]: '
+    header = '[' + se.ENGINE.NAME + 'Search]: '
     if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty()):
-        header = se.COLOR + header + Color.END
+        header = se.ENGINE.COLOR + header + Color.END
 
     # 検索タイプを設定(テキスト or 画像)
     search_type = 'text'
@@ -87,9 +87,9 @@ def suggest(engine, args, cmd=False):
     se.set(engine)
 
     # header
-    header = '[' + se.ENGINE + 'Suggest]: '
+    header = '[' + se.ENGINE.NAME + 'Suggest]: '
     if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty()):
-        header = se.COLOR + header + Color.END
+        header = se.ENGINE.COLOR + header + Color.END
 
     # Suggestを取得
     result = se.suggest(

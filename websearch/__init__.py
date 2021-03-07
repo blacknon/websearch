@@ -63,7 +63,7 @@ def command_suggest(args):
 
             for engine in engines:
                 task = threading.Thread(
-                    suggest, args=(engine, args, True))
+                    target=suggest, args=(engine, args, True))
                 tasks.append(task)
 
             continue
@@ -71,7 +71,7 @@ def command_suggest(args):
         # if in searchengine
         if st in {'baidu', 'bing', 'duckduckgo', 'google', 'yahoo'}:
             task = threading.Thread(
-                suggest, args=(st, args, True))
+                target=suggest, args=(st, args, True))
             tasks.append(task)
 
             continue
