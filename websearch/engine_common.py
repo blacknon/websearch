@@ -8,6 +8,8 @@
 
 import requests
 import json
+
+from urllib import parse
 from fake_useragent import UserAgent
 from bs4 import BeautifulSoup
 
@@ -15,6 +17,7 @@ from bs4 import BeautifulSoup
 class CommonEngine:
     def __init__(self):
         self.SPLASH_URL = ''
+        self.PROXY = ''
         self.session = requests.session()
 
     def set_lang(self, lang, locale):
@@ -30,15 +33,46 @@ class CommonEngine:
             ua = UserAgent()
             useragent = ua.random
 
-        self.session.header.update(
+        self.session.headers.update(
             {
                 'User-Agent': useragent,
                 'Accept-Language': 'ja,en-US;q=0.7,en;q=0.3'
             }
         )
 
+    def set_proxy(self, proxy):
+        self.PROXY = proxy
+
     def set_splash_url(self, splash_url):
         self.SPLASH_URL = splash_url
+
+    def add_waypoint(self, url):
+        ''' 指定されたurlにproxyやヘッドレスブラウザの経由点を追加して返す '''
+
+        # Proxy指定があり、splashの指定がない場合
+        if self.PROXY != '' and self.SPLASH_URL == '':
+            proxies = {
+                'http': self.PROXY,
+                'https': self.PROXY
+            }
+            self.session.proxies = proxies
+            return url
+
+        elif self.SPLASH_URL != '':
+            splash_url = 'http://' + self.SPLASH_URL + '/render.html?'
+
+            # 更にProxy指定もする場合
+            if self.PROXY != '':
+                proxy = parse.quote_plus(self.PROXY)
+                splash_url = splash_url + 'proxy=' + proxy + '&'
+
+            url = parse.quote_plus(url)
+            splash_url = splash_url + 'url=' + url
+
+            return splash_url
+
+        else:
+            return url
 
     def gen_search_url(self, keyword, type):
         result = {}
@@ -88,12 +122,17 @@ class CommonEngine:
     def create_text_links(self, elinks, etitles):
         links = list()
         n = 0
+        before_link = ""
         for link in elinks:
             if len(etitles) > n:
                 d = {"link": link, "title": etitles[n]}
             else:
                 d = {"link": link}
-            links.append(d)
+
+            if before_link != link:
+                links.append(d)
+
+            before_link = link
             n += 1
         return links
 

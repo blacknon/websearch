@@ -22,18 +22,12 @@ def search(engine, args, cmd=False):
     se.set(engine)
 
     # proxy
-    if args.proxy != '' and args.splash == '':
+    if args.proxy != '':
         se.set_proxy(args.proxy)
 
     # Splush
     if args.splash != '':
-        splash_url = 'http://' + args.splash + '/render.html?'
-
-        # Proxyが指定されている場合
-        if args.proxy != '':
-            splash_url = splash_url + 'proxy=' + args.proxy + '&'
-
-        se.set_splash_url(splash_url + 'url=')
+        se.set_splash_url(args.splash)
 
     # lang/country code
     se.set_lang(args.lang, args.country)

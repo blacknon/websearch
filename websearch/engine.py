@@ -12,10 +12,13 @@ import sys
 
 from time import sleep
 from string import ascii_lowercase, digits
-from urllib import parse
 
 from .common import Color
+from .engine_baidu import Baidu
+from .engine_bing import Bing
+from .engine_duckduckgo import DuckDuckGo
 from .engine_google import Google
+from .engine_yahoo import Yahoo
 
 
 # SearchEngineへの処理をまとめるClass
@@ -25,25 +28,25 @@ class SearchEngine:
 
     def set(self, engine):
         ''' 使用する検索エンジンを指定 '''
-        # if engine == 'baidu':
-        #     self.ENGINE = Baidu()
-        #     return
+        if engine == 'baidu':
+            self.ENGINE = Baidu()
+            return
 
-        # if engine == 'bing':
-        #     self.ENGINE = Bing()
-        #     return
+        if engine == 'bing':
+            self.ENGINE = Bing()
+            return
 
-        # if engine == 'duckduckgo':
-        #     self.ENGINE = DuckDuckGo()
-        #     return
+        if engine == 'duckduckgo':
+            self.ENGINE = DuckDuckGo()
+            return
 
         if engine == 'google':
             self.ENGINE = Google()
             return
 
-        # if engine == 'yahoo':
-        #     self.ENGINE = Yahoo()
-        #     return
+        if engine == 'yahoo':
+            self.ENGINE = Yahoo()
+            return
 
     def set_lang(self, lang, locale):
         ''' 言語・地域を指定 '''
@@ -55,11 +58,7 @@ class SearchEngine:
 
     def set_proxy(self, proxy):
         ''' 検索時のProxyを定義 '''
-        proxies = {
-            'http': proxy,
-            'https': proxy
-        }
-        self.session.proxies = proxies
+        self.ENGINE.set_proxy(proxy)
 
     def set_splash_url(self, splash_url):
         self.ENGINE.set_splash_url(splash_url)
@@ -75,11 +74,17 @@ class SearchEngine:
         if maximum == 0:
             return result
 
+        # TODO: デバッグ用の処理。後で消すなり指定できるようにする
+        self.ENGINE.set_useragent()
+
         # 検索処理の開始
         gen_url = self.ENGINE.gen_search_url(keyword, type)
         while True:
             # リクエスト先のurlを取得
             url = next(gen_url)
+
+            # add proxy, browser
+            url = self.ENGINE.add_waypoint(url)
 
             # debug
             if debug is True:
@@ -97,6 +102,7 @@ class SearchEngine:
             # 検索結果をパースしてurlリストを取得する
             # TODO(blacknon): recaptchaチェックを追加
             #                 (もしrecaptchaになっていた場合、回避して続きをやるかどうするかの処理についても検討する)
+            # TODO: resultも関数に渡して重複チェックを行わせる
             links = self.ENGINE.get_links(html, type)
 
             # linksの件数に応じて処理を実施

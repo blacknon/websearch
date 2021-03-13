@@ -19,7 +19,7 @@ class Google(CommonEngine):
         super().__init__()
 
         self.NAME = 'Google'
-        self.COLOR = Color.RED
+        self.COLOR = Color.PURPLE
 
         # リクエスト先のURLを指定
         self.SEARCH_URL = 'https://www.google.com/search'
@@ -63,9 +63,6 @@ class Google(CommonEngine):
             params = parse.urlencode(url_param)
 
             target_url = self.SEARCH_URL + '?' + params
-
-            if self.SPLASH_URL != '':
-                target_url = self.SPLASH_URL + parse.quote(target_url)
 
             yield target_url
 
