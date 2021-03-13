@@ -20,8 +20,7 @@ __version__ = get_distribution('websearch').version
 # searchサブコマンドでの動作
 def command_search(args):
     # args.startもしくはargs.endだけ指定されている場合
-    if ((args.start is None and args.end is not None)
-            or (args.start is not None and args.end is None)):
+    if ((args.start is None and args.end is not None) or (args.start is not None and args.end is None)):
         print("期間を指定する場合は--start, --endの両方を指定してください")
         return
 
@@ -137,8 +136,11 @@ def main():
     )
     parser_search.add_argument(
         '-S', '--splash', type=str, default='',
-        help='Splash(ヘッドレスブラウザ)を利用する場合、そのアドレスを指定。'
+        help='Splash(ヘッドレスブラウザ)を利用する(アドレスを指定)。'
         '(例: localhost:8050 => http://localhost:8050/render.html?url=https://www.google.co.jp/search?hogehoge...)'
+    )
+    parser_search.add_argument(
+        '-s', '--selenium', action='store_true', help='Seleniumを利用する(Splashより優先)'
     )
     parser_search.add_argument(
         '--start', type=lambda s: datetime.strptime(s, '%Y-%m-%d'),
@@ -175,6 +177,28 @@ def main():
         '-P', '--proxy', type=str,
         help='プロキシサーバ(例:socks5://hogehoge:8080, https://fugafuga:18080)')
     parser_suggest.add_argument(
+        '-S', '--splash', type=str, default='',
+        help='Splash(ヘッドレスブラウザ)を利用する(アドレスを指定)。'
+        '(例: localhost:8050 => http://localhost:8050/render.html?url=https://www.google.co.jp/search?hogehoge...)'
+    )
+    parser_suggest.add_argument(
+        '-s', '--selenium', action='store_true', help='Seleniumを利用する(Splashより優先)'
+    )
+    parser_suggest.add_argument(
+        '-l', '--lang', default='ja',
+        choices=[
+            'ja',
+            'en'
+        ],
+        type=str, help='言語を指定')
+    parser_suggest.add_argument(
+        '-c', '--country', default='JP',
+        choices=[
+            'JP',
+            'US'
+        ],
+        type=str, help='言語を指定')
+    parser_suggest.add_argument(
         '--jap', action='store_true', help='日本語の文字を検索キーワードに追加してサジェストを取得'
     )
     parser_suggest.add_argument(
@@ -188,8 +212,8 @@ def main():
         type=str, help='color出力の切り替え')
     parser_suggest.set_defaults(handler=command_suggest)
 
-    # TODO(blacknon): image検索を追加する
-    # image
+    # TODO(blacknon): image検索をサブコマンドとして追加する
+    # parser_image
 
     # --version(-v)オプションのparser定義
     parser.add_argument(

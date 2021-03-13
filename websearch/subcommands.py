@@ -29,6 +29,9 @@ def search(engine, args, cmd=False):
     if args.splash != '':
         se.set_splash_url(args.splash)
 
+    # useragent
+    se.set_useragent()
+
     # lang/country code
     se.set_lang(args.lang, args.country)
 
@@ -74,6 +77,9 @@ def search(engine, args, cmd=False):
             print(header + sep + link)
 
 
+# 画像検索
+# def image(engine, args, cmd=False):
+
 # サジェスト
 def suggest(engine, args, cmd=False):
     # engine
@@ -84,6 +90,20 @@ def suggest(engine, args, cmd=False):
     header = '[' + se.ENGINE.NAME + 'Suggest]: '
     if args.color == 'always' or (args.color == 'auto' and sys.stdout.isatty()):
         header = se.ENGINE.COLOR + header + Color.END
+
+    # useragent
+    se.set_useragent()
+
+    # proxy
+    if args.proxy != '':
+        se.set_proxy(args.proxy)
+
+    # Splush
+    if args.splash != '':
+        se.set_splash_url(args.splash)
+
+    # lang/country code
+    se.set_lang(args.lang, args.country)
 
     # Suggestを取得
     result = se.suggest(

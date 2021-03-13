@@ -63,6 +63,9 @@ class SearchEngine:
     def set_splash_url(self, splash_url):
         self.ENGINE.set_splash_url(splash_url)
 
+    def set_useragent(self, useragent: str = None):
+        self.ENGINE.set_useragent(useragent)
+
     def search(self, keyword, type='text', maximum=100, parallel=False, debug=False, cmd=False):
         ''' 検索 '''
         if cmd is True:
@@ -73,9 +76,6 @@ class SearchEngine:
         # maximumが0の場合、返す値は0個になるのでこのままreturn
         if maximum == 0:
             return result
-
-        # TODO: デバッグ用の処理。後で消すなり指定できるようにする
-        self.ENGINE.set_useragent()
 
         # 検索処理の開始
         gen_url = self.ENGINE.gen_search_url(keyword, type)
