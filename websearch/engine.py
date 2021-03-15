@@ -60,8 +60,11 @@ class SearchEngine:
         ''' 検索時のProxyを定義 '''
         self.ENGINE.set_proxy(proxy)
 
-    def set_splash_url(self, splash_url):
-        self.ENGINE.set_splash_url(splash_url)
+    def set_selenium(self, uri: str = None, browser: str = None):
+        self.ENGINE.set_selenium(uri, browser)
+
+    def set_splash(self, splash_url):
+        self.ENGINE.set_splash(splash_url)
 
     def set_useragent(self, useragent: str = None):
         self.ENGINE.set_useragent(useragent)
@@ -77,14 +80,14 @@ class SearchEngine:
         if maximum == 0:
             return result
 
+        # ENGINEのproxyやブラウザオプションを、各接続方式(Selenium, Splash, requests)に応じてセットし、ブラウザ(session)を作成する
+        self.ENGINE.create_session()
+
         # 検索処理の開始
         gen_url = self.ENGINE.gen_search_url(keyword, type)
         while True:
             # リクエスト先のurlを取得
             url = next(gen_url)
-
-            # add proxy, browser
-            url = self.ENGINE.add_waypoint(url)
 
             # debug
             if debug is True:
@@ -92,7 +95,7 @@ class SearchEngine:
                 print(Color.CYAN + url + Color.END, file=sys.stderr)
 
             # 検索結果の取得
-            html = self.session.get(url).text
+            html = self.session.get_result(url)
 
             # debug
             if debug is True:
@@ -149,6 +152,8 @@ class SearchEngine:
             word = keyword + char
             url = self.ENGINE.gen_suggest_url(word)
             html = self.session.get(url)
+
+            # TODO: 各エンジンでjson/textの変換処理を別途実装する必要がある
             suggests = self.ENGINE.get_suggest_list(suggests, char, html)
 
             sleep(0.5)

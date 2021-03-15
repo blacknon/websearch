@@ -86,7 +86,7 @@ class Google(CommonEngine):
         # Splash経由で通信している場合
         self.SOUP_SELECT_URL = '.ZINbbc > .kCrYT > a'
         self.SOUP_SELECT_TITLE = '.ZINbbc > .kCrYT > a > .zBAuLc > .BNeawe'
-        if self.SPLASH_URL != "":
+        if self.SPLASH_URI != "":
             self.SOUP_SELECT_URL = '.tF2Cxc > .yuRUbf > a'
             self.SOUP_SELECT_TITLE = '.tF2Cxc > .yuRUbf > a > .LC20lb'
 
@@ -100,7 +100,7 @@ class Google(CommonEngine):
         return suggests
 
     def processings_elist(self, elinks, etitles):
-        if self.SPLASH_URL == "":
+        if self.SPLASH_URI == "":
             new_elinks = []
             for elink in elinks:
                 parsed = parse.urlparse(elink)

@@ -88,7 +88,7 @@ class Yahoo(CommonEngine):
         return url
 
     def get_links(self, html, type):
-        if self.SPLASH_URL != "":
+        if self.SPLASH_URI != "":
             self.SOUP_SELECT_JSON = '#__NEXT_DATA__'
             self.SOUP_SELECT_IMAGE = '.rg_meta.notranslate'
 

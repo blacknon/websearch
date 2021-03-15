@@ -6,12 +6,17 @@
 # that can be found in the LICENSE file.
 # =======================================================
 
+# TODO: mapを別ファイルに移動する
+# TODO: subcommand用functionを別ファイルに移動する
+
 import argparse
-from datetime import datetime
+import copy
 import threading
 
-from .subcommands import search, suggest
+from datetime import datetime
 from pkg_resources import get_distribution
+
+from .subcommands import search, suggest
 
 # version (setup.pyから取得してくる)
 __version__ = get_distribution('websearch').version
@@ -89,131 +94,161 @@ def main():
         description='各種サーチエンジンから指定したクエリの結果(url)およびSuggestを取得するスクリプト')
     subparsers = parser.add_subparsers()
 
+    # サブコマンド共通の引数
+    common_args_map = [
+        {
+            "args": ["query"],
+            "action": "store",
+            "type": str,
+            "help": "検索文字列(クエリ)",
+        },
+        {
+            "args": ["-t", "--search_type"],
+            "default": "google",
+            "choices": ["baidu", "bing", "duckduckgo", "google", "yahoo", "all"],
+            "nargs": "+",
+            "type": str,
+            "help": "使用する検索エンジンを指定",
+        },
+        {
+            "args": ["-l", "--lang"],
+            "default": "ja",
+            "choices": ["JP", "US"],
+            "type": str,
+            "help": "言語を指定",
+        },
+        {
+            "args": ["-c", "--country"],
+            "default": "JP",
+            "choices": ["JP", "US"],
+            "type": str,
+            "help": "言語を指定",
+        },
+        {
+            "args": ["-P", "--proxy"],
+            "default": "",
+            "type": str,
+            "help": "プロキシサーバーを指定(例:socks5://hogehoge:8080, https://fugafuga:18080)",
+        },
+        {
+            "args": ["-s", "--selenium"],
+            "action": "store_true",
+            "help": "Selenium(headless browser)を使用する(排他: Splashより優先)",
+        },
+        {
+            "args": ["-S", "--splash"],
+            "action": "store_true",
+            "help": "Splash(headless browser)を使用する(排他: Seleniumの方が優先)",
+        },
+        {
+            "args": ["-e", "--browser-endpoint"],
+            "default": "",
+            "type": str,
+            "help": "Selenium/Splash等のヘッドレスブラウザのエンドポイントを指定(例: localhost:8050)",
+        },
+        {
+            "args": ["--color"],
+            "default": "auto",
+            "choices": ["auto", "none", "always"],
+            "type": str,
+            "help": "color出力の切り替え"
+        },
+    ]
+
+    # サブコマンド `search` の引数
+    search_args_map = [
+        {
+            "args": ["-T", "--title"],
+            "action": "store_true",
+            "help": "検索結果のタイトルをセットで出力する",
+        },
+        {
+            "args": ["-0", "--nullchar"],
+            "action": "store_true",
+            "help": "null characterを区切り文字として使用する",
+        },
+        {
+            "args": ["-n", "--num"],
+            "default": 300,
+            "type": int,
+            "help": "検索結果の取得数を指定する",
+        },
+        {
+            "args": ["--start"],
+            "type": lambda s: datetime.strptime(s, '%Y-%m-%d'),
+            "help": "期間指定(開始)",
+        },
+        {
+            "args": ["--end"],
+            "type": lambda s: datetime.strptime(s, '%Y-%m-%d'),
+            "help": "期間指定(終了)",
+        },
+        {
+            "args": ["--debug"],
+            "action": "store_true",
+            "help": "debugモードを有効にする",
+        },
+    ]
+    search_args_map.extend(copy.deepcopy(common_args_map))
+
+    # サブコマンド `image` の引数
+
+    # サブコマンド `suggest` の引数
+    suggest_args_map = [
+        {
+            "args": ["--jap"],
+            "action": "store_true",
+            "help": "日本語の文字を検索キーワードに追加してサジェストを取得"
+        },
+        {
+            "args": ["--alph"],
+            "action": "store_true",
+            "help": "アルファベット文字を検索キーワードに追加してサジェストを取得"
+        },
+        {
+            "args": ["--num"],
+            "action": "store_true",
+            "help": "数字を検索キーワードに追加してサジェストを取得"
+        },
+    ]
+    suggest_args_map.extend(copy.deepcopy(common_args_map))
+
     # search
+    # ----------
     parser_search = subparsers.add_parser(
-        'search', help='search mode. see `search -h`')
-    parser_search.add_argument(
-        'query', action='store', type=str, help='query')
-    parser_search.add_argument(
-        '-t', '--search_type', default=['google'],
-        choices=[
-            'baidu',
-            'bing',
-            'duckduckgo',
-            'google',
-            'yahoo',
-            'all'
-        ],
-        nargs='+', type=str, help='検索エンジンを指定')
-    parser_search.add_argument(
-        '-l', '--lang', default='ja',
-        choices=[
-            'ja',
-            'en'
-        ],
-        type=str, help='言語を指定')
-    parser_search.add_argument(
-        '-c', '--country', default='JP',
-        choices=[
-            'JP',
-            'US'
-        ],
-        type=str, help='言語を指定')
-    parser_search.add_argument(
-        '-T', '--title', action='store_true',
-        help='検索結果のタイトルも出力する'
+        'search',
+        help='search mode. see `search -h`'
     )
-    parser_search.add_argument(
-        '-0', '--nullchar', action='store_true',
-        help='null characterを区切り文字として使用する'
-    )
-    parser_search.add_argument(
-        '-n', '--num', default=300, type=int, help='検索結果の取得数'
-    )
-    parser_search.add_argument(
-        '-P', '--proxy', type=str, default='',
-        help='プロキシサーバ(例:socks5://hogehoge:8080,https://fugafuga:18080)'
-    )
-    parser_search.add_argument(
-        '-S', '--splash', type=str, default='',
-        help='Splash(ヘッドレスブラウザ)を利用する(アドレスを指定)。'
-        '(例: localhost:8050 => http://localhost:8050/render.html?url=https://www.google.co.jp/search?hogehoge...)'
-    )
-    parser_search.add_argument(
-        '-s', '--selenium', action='store_true', help='Seleniumを利用する(Splashより優先)'
-    )
-    parser_search.add_argument(
-        '--start', type=lambda s: datetime.strptime(s, '%Y-%m-%d'),
-        help='期間指定(開始)'
-    )
-    parser_search.add_argument(
-        '--end', type=lambda s: datetime.strptime(s, '%Y-%m-%d'),
-        help='期間指定(終了)'
-    )
-    parser_search.add_argument(
-        '--debug', action='store_true', help='debug mode')  # debug
-    parser_search.add_argument(
-        '--color', default='auto', choices=['auto', 'none', 'always'],
-        type=str, help='color出力の切り替え')
+
+    # add_argument
+    for element in search_args_map:
+        args = element['args']
+        element.pop('args')
+        parser_search.add_argument(*args, **element)
+
+    # set parser_search
     parser_search.set_defaults(handler=command_search)
 
-    # suggest
-    parser_suggest = subparsers.add_parser(
-        'suggest', help='suggest mode. see `suggest -h`')
-    parser_suggest.add_argument(
-        'query', action='store', type=str, help='query')
-    parser_suggest.add_argument(
-        '-t', '--search_type', default=['google'],
-        choices=[
-            'baidu',
-            'bing',
-            'duckduckgo',
-            'google',
-            'yahoo',
-            'all'
-        ],
-        nargs='+', type=str, help='検索エンジンを指定')
-    parser_suggest.add_argument(
-        '-P', '--proxy', type=str,
-        help='プロキシサーバ(例:socks5://hogehoge:8080, https://fugafuga:18080)')
-    parser_suggest.add_argument(
-        '-S', '--splash', type=str, default='',
-        help='Splash(ヘッドレスブラウザ)を利用する(アドレスを指定)。'
-        '(例: localhost:8050 => http://localhost:8050/render.html?url=https://www.google.co.jp/search?hogehoge...)'
-    )
-    parser_suggest.add_argument(
-        '-s', '--selenium', action='store_true', help='Seleniumを利用する(Splashより優先)'
-    )
-    parser_suggest.add_argument(
-        '-l', '--lang', default='ja',
-        choices=[
-            'ja',
-            'en'
-        ],
-        type=str, help='言語を指定')
-    parser_suggest.add_argument(
-        '-c', '--country', default='JP',
-        choices=[
-            'JP',
-            'US'
-        ],
-        type=str, help='言語を指定')
-    parser_suggest.add_argument(
-        '--jap', action='store_true', help='日本語の文字を検索キーワードに追加してサジェストを取得'
-    )
-    parser_suggest.add_argument(
-        '--alph', action='store_true', help='アルファベット文字を検索キーワードに追加してサジェストを取得'
-    )
-    parser_suggest.add_argument(
-        '--num', action='store_true', help='数字を検索キーワードに追加してサジェストを取得'
-    )
-    parser_suggest.add_argument(
-        '--color', default='auto', choices=['auto', 'none', 'always'],
-        type=str, help='color出力の切り替え')
-    parser_suggest.set_defaults(handler=command_suggest)
+    # image
+    # ----------
 
     # TODO(blacknon): image検索をサブコマンドとして追加する
     # parser_image
+
+    # suggest
+    # ----------
+    parser_suggest = subparsers.add_parser(
+        'suggest',
+        help='suggest mode. see `suggest -h`'
+    )
+
+    # add_argument
+    for element in suggest_args_map:
+        args = element['args']
+        element.pop('args')
+        parser_suggest.add_argument(*args, **element)
+
+    parser_suggest.set_defaults(handler=command_suggest)
 
     # --version(-v)オプションのparser定義
     parser.add_argument(

@@ -6,6 +6,8 @@
 # that can be found in the LICENSE file.
 # =======================================================
 
+# TODO: 共通系の処理に渡すように加工
+
 
 import sys
 
